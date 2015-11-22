@@ -1,0 +1,22 @@
+# dnx
+project.lock.json
+artifacts/
+
+# vs
+.vs/
+[Aa]pp_[Dd]ata/
+[Bb]in/
+[D]ebug/
+[Oo]bj/
+[Aa]pp[Ss]ettingsSecrets.config
+
+# nuget
+[Pp]ackages/
+
+# resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+#windows stuff
+Thumbs.db
