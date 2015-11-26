@@ -1,4 +1,4 @@
-﻿namespace InfluxDbClient
+﻿namespace MyInfluxDbClient
 {
     public class HourResolution : TimeStampResolution
     {

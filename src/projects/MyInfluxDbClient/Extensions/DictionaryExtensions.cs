@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InfluxDbClient.Extensions
+namespace MyInfluxDbClient.Extensions
 {
     internal static class DictionaryExtensions
     {

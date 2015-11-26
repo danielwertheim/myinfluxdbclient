@@ -4,10 +4,10 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using Requester;
 
-namespace InfluxDbClient
+namespace MyInfluxDbClient
 {
     [Serializable]
-    public class InfluxDbException : Exception
+    public class InfluxDbClientException : Exception
     {
         public HttpMethod HttpMethod { get; private set; }
         public HttpStatusCode HttpStatus { get; private set; }
@@ -15,11 +15,11 @@ namespace InfluxDbClient
         public string Reason { get; private set; }
         public string Content { get; private set; }
 
-        internal InfluxDbException(HttpTextResponse response)
+        internal InfluxDbClientException(HttpTextResponse response)
             : this(response.RequestMethod, response.StatusCode, response.RequestUri, response.Reason, response.Content)
         { }
 
-        public InfluxDbException(HttpMethod httpMethod, HttpStatusCode httpStatus, Uri uri, string reason, string content)
+        public InfluxDbClientException(HttpMethod httpMethod, HttpStatusCode httpStatus, Uri uri, string reason, string content)
             : base(string.Format("InfluxDb request failed.{0}HttpMethod: {1}{0}HttpStatus: {2}{0}Uri:{3}{0}Reason: {4}{0}Content: {5}{0}",
                 Environment.NewLine,
                 httpMethod,
@@ -35,7 +35,7 @@ namespace InfluxDbClient
             Content = content;
         }
 
-        protected InfluxDbException(SerializationInfo info, StreamingContext context)
+        protected InfluxDbClientException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         { }
     }

@@ -2,10 +2,10 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EnsureThat;
-using InfluxDbClient.Extensions;
+using MyInfluxDbClient.Extensions;
 using Requester;
 
-namespace InfluxDbClient
+namespace MyInfluxDbClient
 {
     public class InfluxDbClient : IDisposable
     {
@@ -67,7 +67,7 @@ namespace InfluxDbClient
         protected virtual void EnsureSuccessful(HttpTextResponse response)
         {
             if (!response.IsSuccess)
-                throw new InfluxDbException(response);
+                throw new InfluxDbClientException(response);
         }
     }
 }

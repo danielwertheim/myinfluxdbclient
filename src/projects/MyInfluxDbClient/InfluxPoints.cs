@@ -4,7 +4,7 @@ using System.Text;
 using EnsureThat;
 using Requester.Http;
 
-namespace InfluxDbClient
+namespace MyInfluxDbClient
 {
     public class InfluxPoints
     {

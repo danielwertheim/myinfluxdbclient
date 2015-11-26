@@ -7,8 +7,8 @@
     <ProjectGuid>{8BDC0C80-D83B-42EB-915B-A1694559E16A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InfluxDbClient</RootNamespace>
-    <AssemblyName>InfluxDbClient</AssemblyName>
+    <RootNamespace>MyInfluxDbClient</RootNamespace>
+    <AssemblyName>MyInfluxDbClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -56,7 +56,7 @@
     <Compile Include="HourResolution.cs" />
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
-    <Compile Include="InfluxDbException.cs" />
+    <Compile Include="InfluxDbClientException.cs" />
     <Compile Include="InfluxPoint.cs" />
     <Compile Include="InfluxPoints.cs" />
     <Compile Include="MicrosecondsResolution.cs" />

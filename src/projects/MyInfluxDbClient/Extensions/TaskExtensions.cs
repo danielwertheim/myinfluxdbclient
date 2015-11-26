@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace InfluxDbClient.Extensions
+namespace MyInfluxDbClient.Extensions
 {
     public static class TaskExtensions
     {

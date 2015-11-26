@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EnsureThat;
-using InfluxDbClient.Extensions;
+using MyInfluxDbClient.Extensions;
 
-namespace InfluxDbClient
+namespace MyInfluxDbClient
 {
     public class InfluxPoint
     {

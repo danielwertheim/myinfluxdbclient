@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using InfluxDbClient;
+using MyInfluxDbClient;
 
 namespace MrLab
 {
@@ -14,7 +14,7 @@ namespace MrLab
 
         static async Task Simple()
         {
-            var measurements = new InfluxPoints()
+            var points = new InfluxPoints()
                 .Add(new InfluxPoint("ticketsold").AddTag("seller", "1").AddTag("cur", "SEK").AddField("amt", 150.0).AddField("fee", 50.0)) //TimeStamp is assigned in Influx
                 .Add(new InfluxPoint("ticketsold").AddTag("seller", "1").AddTag("cur", "USD").AddField("amt", 10.0).AddField("fee", 2.5).AddTimeStamp())
                 .Add(new InfluxPoint("ticketsold").AddTag("seller", "2").AddTag("cur", "USD").AddField("amt", 10.0).AddField("fee", 2.5).AddTimeStamp(DateTime.Now)) //Is converted to nanoseconds since Epoch (UTC)
@@ -25,10 +25,10 @@ namespace MrLab
                 .Add(new InfluxPoint("ticketsold").AddTag("seller", "2").AddTag("cur", "EUR").AddField("amt", 51.8).AddField("fee", 5.0).AddTimeStamp(TimeStampResolution.Minutes))
                 .Add(new InfluxPoint("ticketsold").AddTag("seller", "1").AddTag("cur", "USD").AddField("amt", 1.0).AddField("fee", 1.0).AddTimeStamp(TimeStampResolution.Hours));
 
-            using (var client = new InfluxDbClient.InfluxDbClient("http://192.168.1.176:9086"))
+            using (var client = new InfluxDbClient("http://192.168.1.176:9086"))
             {
                 await client.CreateDbAsync("mydb");
-                await client.WriteAsync("mydb", measurements);
+                await client.WriteAsync("mydb", points);
             }
         }
 
@@ -37,7 +37,7 @@ namespace MrLab
             var measurements = new InfluxPoints();
             var rnd = new Random();
 
-            using (var client = new InfluxDbClient.InfluxDbClient("http://192.168.1.176:9086"))
+            using (var client = new InfluxDbClient("http://192.168.1.176:9086"))
             {
                 var c = 0;
                 for (var b = 0; b < batches; b++)

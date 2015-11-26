@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace InfluxDbClient
+namespace MyInfluxDbClient
 {
     public static class InfluxDbEnvironment
     {

@@ -2,14 +2,14 @@ using System.Runtime.InteropServices;
 ﻿using System.Reflection;
 
 #if DEBUG
-[assembly: AssemblyProduct("InfluxDbClient (Debug)")]
+[assembly: AssemblyProduct("MyInfluxDbClient (Debug)")]
 [assembly: AssemblyConfiguration("Debug")]
 #else
-[assembly: AssemblyProduct("InfluxDbClient (Release)")]
+[assembly: AssemblyProduct("MyInfluxDbClient (Release)")]
 [assembly: AssemblyConfiguration("Release")]
 #endif
 
-[assembly: AssemblyDescription("InfluxDbClient - a simple async InfluxDbClient.")]
+[assembly: AssemblyDescription("MyInfluxDbClient - a simple async client for InfluxDb.")]
 [assembly: AssemblyCompany("Daniel Wertheim")]
 [assembly: AssemblyCopyright("Copyright © 2015 Daniel Wertheim")]
 [assembly: AssemblyTrademark("")]
