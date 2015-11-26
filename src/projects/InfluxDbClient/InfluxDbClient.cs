@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EnsureThat;
+using InfluxDbClient.Extensions;
 using Requester;
 
 namespace InfluxDbClient
@@ -41,24 +42,32 @@ namespace InfluxDbClient
                 throw new ObjectDisposedException(GetType().Name);
         }
 
-        public Task<HttpTextResponse> CreateDbAsync(string dbName)
+        public async Task CreateDbAsync(string dbName)
         {
             Ensure.That(dbName, nameof(dbName)).IsNotNullOrWhiteSpace();
 
             var request = new HttpRequest(HttpMethod.Get, $"query?q=create database {dbName}");
 
-            return _requester.SendAsync(request);
+            var response = await _requester.SendAsync(request).ForAwait();
+            EnsureSuccessful(response);
         }
 
-        public Task<HttpTextResponse> WriteMeasurementsAsync(string dbName, Measurements measurements)
+        public async Task WriteAsync(string dbName, InfluxPoints points)
         {
             Ensure.That(dbName, nameof(dbName)).IsNotNullOrWhiteSpace();
-            Ensure.That(measurements, nameof(measurements)).IsNotNull();
+            Ensure.That(points, nameof(points)).IsNotNull();
 
             var request = new HttpRequest(HttpMethod.Post, $"write?db={dbName}")
-                .WithContent(measurements.ToBytesContent());
+                .WithContent(points.ToBytesContent());
 
-            return _requester.SendAsync(request);
+            var response = await _requester.SendAsync(request).ForAwait();
+            EnsureSuccessful(response);
+        }
+
+        protected virtual void EnsureSuccessful(HttpTextResponse response)
+        {
+            if (!response.IsSuccess)
+                throw new InfluxDbException(response);
         }
     }
 }

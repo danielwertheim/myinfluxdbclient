@@ -6,24 +6,24 @@ using Requester.Http;
 
 namespace InfluxDbClient
 {
-    public class Measurements
+    public class InfluxPoints
     {
-        private readonly List<Measurement> _measurements = new List<Measurement>();
+        private readonly List<InfluxPoint> _measurements = new List<InfluxPoint>();
 
         public int Count => _measurements.Count;
 
         public bool IsEmpty => !_measurements.Any();
 
-        public Measurements Add(Measurement measurement)
+        public InfluxPoints Add(InfluxPoint point)
         {
-            Ensure.That(measurement, nameof(measurement)).IsNotNull();
+            Ensure.That(point, nameof(point)).IsNotNull();
 
-            _measurements.Add(measurement);
+            _measurements.Add(point);
 
             return this;
         }
 
-        public Measurements Add(IEnumerable<Measurement> measurements)
+        public InfluxPoints Add(IEnumerable<InfluxPoint> measurements)
         {
             Ensure.That(measurements, nameof(measurements)).IsNotNull();
 

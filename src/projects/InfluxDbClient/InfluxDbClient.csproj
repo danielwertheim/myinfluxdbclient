@@ -52,11 +52,13 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="HourResolution.cs" />
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
-    <Compile Include="Measurement.cs" />
-    <Compile Include="Measurements.cs" />
+    <Compile Include="InfluxDbException.cs" />
+    <Compile Include="InfluxPoint.cs" />
+    <Compile Include="InfluxPoints.cs" />
     <Compile Include="MicrosecondsResolution.cs" />
     <Compile Include="MillisecondsResolution.cs" />
     <Compile Include="MinuteResolution.cs" />

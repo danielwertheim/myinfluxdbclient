@@ -7,7 +7,7 @@ using InfluxDbClient.Extensions;
 
 namespace InfluxDbClient
 {
-    public class Measurement
+    public class InfluxPoint
     {
         private readonly Dictionary<string, string> _tags = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _fields = new Dictionary<string, string>();
@@ -16,7 +16,7 @@ namespace InfluxDbClient
 
         public string Name { get; }
 
-        public Measurement(string name)
+        public InfluxPoint(string name)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();
 
@@ -28,19 +28,19 @@ namespace InfluxDbClient
             return !string.IsNullOrWhiteSpace(Name) && _fields.Any();
         }
 
-        public Measurement AddTag(string name, IConvertible value)
+        public InfluxPoint AddTag(string name, IConvertible value)
         {
             return AddRawTag(name, value.ToString(InfluxDbEnvironment.FormatProvider));
         }
 
-        public Measurement AddTag(string name, string value)
+        public InfluxPoint AddTag(string name, string value)
         {
             return AddRawTag(name, string.IsNullOrEmpty(value)
                 ? value
                 : value.Replace("\"", string.Empty).Replace(" ", "\\ ").Replace(",", "\\,"));
         }
 
-        public Measurement AddRawTag(string name, string value)
+        public InfluxPoint AddRawTag(string name, string value)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();
 
@@ -49,42 +49,42 @@ namespace InfluxDbClient
             return this;
         }
 
-        public Measurement AddField(string name, bool value)
+        public InfluxPoint AddField(string name, bool value)
         {
             return AddRawField(name, value ? InfluxDbEnvironment.Fields.TrueString : InfluxDbEnvironment.Fields.FalseString);
         }
 
-        public Measurement AddField(string name, int value)
+        public InfluxPoint AddField(string name, int value)
         {
             return AddRawField(name, value.ToString(InfluxDbEnvironment.FormatProvider) + InfluxDbEnvironment.Fields.IntegerSuffix);
         }
 
-        public Measurement AddField(string name, long value)
+        public InfluxPoint AddField(string name, long value)
         {
             return AddRawField(name, value.ToString(InfluxDbEnvironment.FormatProvider) + InfluxDbEnvironment.Fields.IntegerSuffix);
         }
 
-        public Measurement AddField(string name, float value)
+        public InfluxPoint AddField(string name, float value)
         {
             return AddRawField(name, value.ToString(InfluxDbEnvironment.FormatProvider));
         }
 
-        public Measurement AddField(string name, double value)
+        public InfluxPoint AddField(string name, double value)
         {
             return AddRawField(name, value.ToString(InfluxDbEnvironment.FormatProvider));
         }
 
-        public Measurement AddField(string name, decimal value)
+        public InfluxPoint AddField(string name, decimal value)
         {
             return AddRawField(name, value.ToString(InfluxDbEnvironment.FormatProvider));
         }
 
-        public Measurement AddField(string name, string value)
+        public InfluxPoint AddField(string name, string value)
         {
             return AddRawField(name, $"\"{value ?? string.Empty}\"");
         }
 
-        public Measurement AddRawField(string name, string value)
+        public InfluxPoint AddRawField(string name, string value)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();
 
@@ -93,7 +93,7 @@ namespace InfluxDbClient
             return this;
         }
 
-        public Measurement AddTimeStamp(TimeStampResolution resolution = null)
+        public InfluxPoint AddTimeStamp(TimeStampResolution resolution = null)
         {
             _timeStamp = TimeStamp.Now();
             _timeStampResolution = resolution ?? TimeStampResolution.Nanoseconds;
@@ -101,7 +101,7 @@ namespace InfluxDbClient
             return this;
         }
 
-        public Measurement AddTimeStamp(DateTime value, TimeStampResolution resolution = null)
+        public InfluxPoint AddTimeStamp(DateTime value, TimeStampResolution resolution = null)
         {
             _timeStamp = TimeStamp.From(value);
             _timeStampResolution = resolution ?? TimeStampResolution.Nanoseconds;
