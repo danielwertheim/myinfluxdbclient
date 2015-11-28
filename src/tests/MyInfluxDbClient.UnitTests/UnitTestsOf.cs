@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
-    public abstract class UnitTestsOf<TSut> : IDisposable
+    public abstract class UnitTestsOf<TSut> : UnitTests, IDisposable
     {
         protected TSut SUT { get; set; }
 
@@ -12,7 +12,10 @@ namespace MyInfluxDbClient.UnitTests
             var sutAsDisposable = SUT as IDisposable;
             sutAsDisposable?.Dispose();
         }
+    }
 
+    public abstract class UnitTests
+    {
         [SetUp]
         protected virtual void OnBeforeEachTest() { }
 
