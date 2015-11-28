@@ -7,9 +7,9 @@ namespace MyInfluxDbClient.UnitTests
     public class TimeStampTests : UnitTests
     {
         [Test]
-        public void Now_Should_give_TimeStamp_with_UTC_ticks_from_epoch()
+        public void Now_Should_return_TimeStamp_with_UTC_ticks_from_epoch()
         {
-            var expexted = GetUnixDateTime();
+            var expexted = UnixDateTime.Now();
 
             var ts = TimeStamp.Now();
 
@@ -18,9 +18,9 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void From_Given_a_non_UTC_date_time_Should_give_TimeStamp_with_UTC_ticks_from_epoch()
+        public void From_Should_give_TimeStamp_with_UTC_ticks_from_epoch_When_a_non_UTC_date_time_is_passed()
         {
-            var expexted = GetUnixDateTime();
+            var expexted = UnixDateTime.Now();
 
             var ts = TimeStamp.From(DateTime.Now);
 
@@ -29,9 +29,9 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void From_Given_a_UTC_date_time_Should_give_TimeStamp_with_UTC_ticks_from_epoch()
+        public void From_Should_give_TimeStamp_with_UTC_ticks_from_epoch_When_an_UTC_date_time_is_passed()
         {
-            var expexted = GetUnixDateTime();
+            var expexted = UnixDateTime.Now();
 
             var ts = TimeStamp.From(DateTime.UtcNow);
 
@@ -40,7 +40,7 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void Equals_Given_based_on_different_date_time_values_Should_return_false()
+        public void Equals_Should_return_false_When_a_time_stamp_based_on_a_different_date_time_is_passed()
         {
             var now = DateTime.Now;
             var tsX = TimeStamp.From(now);
@@ -50,18 +50,13 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void Equals_Given_based_on_same_date_time_values_Should_return_true()
+        public void Equals_Should_return_true_When_a_time_stamp_based_on_same_date_time_is_passed()
         {
             var now = DateTime.Now;
             var tsX = TimeStamp.From(now);
             var tsY = TimeStamp.From(now);
 
             tsX.Equals(tsY).Should().BeTrue();
-        }
-
-        private static DateTime GetUnixDateTime()
-        {
-            return new DateTime(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
         }
     }
 }

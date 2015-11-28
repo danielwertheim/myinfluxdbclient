@@ -11,7 +11,7 @@ namespace MyInfluxDbClient
     {
         private readonly Dictionary<string, string> _tags = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _fields = new Dictionary<string, string>();
-        private TimeStamp? _timeStamp;
+        private TimeStamp _timeStamp;
         private TimeStampResolution _timeStampResolution;
 
         public string Name { get; }
@@ -118,10 +118,10 @@ namespace MyInfluxDbClient
             sb.Append(" ");
             _fields.AppendTo(sb);
 
-            if (_timeStamp.HasValue)
+            if (_timeStamp != null)
             {
                 sb.Append(" ");
-                sb.Append(_timeStampResolution.NanosecondsFrom(_timeStamp.Value));
+                sb.Append(_timeStampResolution.NanosecondsFrom(_timeStamp));
             }
 
             return sb.ToString();
