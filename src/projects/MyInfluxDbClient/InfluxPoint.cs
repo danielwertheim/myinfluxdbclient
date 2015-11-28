@@ -96,7 +96,7 @@ namespace MyInfluxDbClient
         public InfluxPoint AddTimeStamp(TimeStampResolution resolution = null)
         {
             _timeStamp = TimeStamp.Now();
-            _timeStampResolution = resolution ?? TimeStampResolution.Nanoseconds;
+            _timeStampResolution = resolution ?? TimeStampResolutions.Default;
 
             return this;
         }
@@ -104,7 +104,7 @@ namespace MyInfluxDbClient
         public InfluxPoint AddTimeStamp(DateTime value, TimeStampResolution resolution = null)
         {
             _timeStamp = TimeStamp.From(value);
-            _timeStampResolution = resolution ?? TimeStampResolution.Nanoseconds;
+            _timeStampResolution = resolution ?? TimeStampResolutions.Default;
 
             return this;
         }

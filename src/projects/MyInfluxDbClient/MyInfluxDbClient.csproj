@@ -67,6 +67,7 @@
     <Compile Include="SecondsResolution.cs" />
     <Compile Include="TimeStamp.cs" />
     <Compile Include="TimeStampResolution.cs" />
+    <Compile Include="TimeStampResolutions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
