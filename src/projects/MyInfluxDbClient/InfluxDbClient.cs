@@ -3,7 +3,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using EnsureThat;
 using MyInfluxDbClient.Extensions;
+using MyInfluxDbClient.Protocols;
 using Requester;
+using Requester.Http;
 
 namespace MyInfluxDbClient
 {
@@ -12,12 +14,14 @@ namespace MyInfluxDbClient
         private HttpRequester _requester;
 
         protected bool IsDisposed { get; private set; }
+        protected IInfluxPointsSerializer InfluxPointsSerializer { get; set; }
 
         public InfluxDbClient(string serverUrl)
         {
             Ensure.That(serverUrl, nameof(serverUrl)).IsNotNullOrWhiteSpace();
 
             _requester = new HttpRequester(serverUrl);
+            InfluxPointsSerializer = new LineProtocolInfluxPointsSerializer();
         }
 
         public void Dispose()
@@ -56,15 +60,24 @@ namespace MyInfluxDbClient
         {
             Ensure.That(dbName, nameof(dbName)).IsNotNullOrWhiteSpace();
             Ensure.That(points, nameof(points)).IsNotNull();
+            Ensure.That(points.IsEmpty, nameof(points)).WithExtraMessageOf(() => "Can not write empty points collections.").IsFalse();
 
+            var bytesContent = GetBytesContent(points);
             var request = new HttpRequest(HttpMethod.Post, $"write?db={dbName}")
-                .WithContent(points.ToBytesContent());
+                .WithContent(bytesContent);
 
             var response = await _requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
 
-        protected virtual void EnsureSuccessful(HttpTextResponse response)
+        protected BytesContent GetBytesContent(InfluxPoints points)
+        {
+            var buff = InfluxPointsSerializer.Serialize(points);
+
+            return new BytesContent(buff, HttpContentTypes.Instance.Text);
+        }
+
+        protected void EnsureSuccessful(HttpTextResponse response)
         {
             if (!response.IsSuccess)
                 throw new InfluxDbClientException(response);

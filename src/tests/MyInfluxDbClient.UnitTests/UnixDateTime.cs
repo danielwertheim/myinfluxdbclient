@@ -1,4 +1,5 @@
 ﻿using System;
+using MyInfluxDbClient.Protocols;
 
 namespace MyInfluxDbClient.UnitTests
 {
@@ -6,7 +7,7 @@ namespace MyInfluxDbClient.UnitTests
     {
         internal static DateTime Now()
         {
-            return new DateTime(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            return new DateTime(DateTime.UtcNow.Ticks - LineProtocolFormat.EpochTicks);
         }
     }
 }

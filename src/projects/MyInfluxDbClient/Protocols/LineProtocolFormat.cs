@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 
-namespace MyInfluxDbClient
+namespace MyInfluxDbClient.Protocols
 {
-    public static class InfluxDbEnvironment
+    public static class LineProtocolFormat
     {
         public static class Fields
         {
@@ -15,5 +16,6 @@ namespace MyInfluxDbClient
         public static readonly long EpochTicks = new DateTime(1970, 1, 1).Ticks;
         public static readonly string NewLine = new string(new[] { (char)10 });
         public static readonly IFormatProvider FormatProvider = CultureInfo.InvariantCulture;
+        public static readonly Encoding Encoding = Encoding.UTF8;
     }
 }
