@@ -115,7 +115,7 @@ namespace MyInfluxDbClient
 
         private static string EscapeStringValue(string value)
         {
-            return value.Replace("\"", string.Empty).Replace(" ", "\\ ").Replace(",", "\\,");
+            return value.Replace("\"", "\\\"").Replace(" ", "\\ ").Replace(",", "\\,");
         }
     }
 }

@@ -40,6 +40,14 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void Constructing_Should_escape_measurement_name_When_name_contains_quotes()
+        {
+            SUT = new InfluxPoint("\"test\"");
+
+            SUT.Measurement.Should().Be("\\\"test\\\"");
+        }
+
+        [Test]
         public void IsComplete_Should_return_false_When_only_measurement_is_provided()
         {
             SUT = CreatePoint();
@@ -102,6 +110,15 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void AddTag_Should_add_escaped_string_value_When_string_value_with_quotes_are_passed()
+        {
+            SUT = CreatePoint()
+                .AddTag("Test", "\"quoted\"");
+
+            SUT.ShouldContainTag("Test", "\\\"quoted\\\"");
+        }
+
+        [Test]
         public void AddField_Should_add_string_value_When_string_is_passed()
         {
             SUT = CreatePoint()
@@ -135,6 +152,15 @@ namespace MyInfluxDbClient.UnitTests
                 .AddField("Test", "funny,string,is");
 
             SUT.ShouldContainField("Test", "funny\\,string\\,is");
+        }
+
+        [Test]
+        public void AddField_Should_add_escaped_string_value_When_string_value_with_quotes_are_passed()
+        {
+            SUT = CreatePoint()
+                .AddField("Test", "\"quoted\"");
+
+            SUT.ShouldContainField("Test", "\\\"quoted\\\"");
         }
 
         private InfluxPoint CreatePoint()
