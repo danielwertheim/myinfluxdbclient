@@ -21,7 +21,7 @@ namespace MyInfluxDbClient
         {
             Ensure.That(measurement, nameof(measurement)).IsNotNullOrWhiteSpace();
 
-            Measurement = measurement;
+            Measurement = EscapeStringValue(measurement);
         }
 
         public bool IsComplete()
@@ -38,14 +38,14 @@ namespace MyInfluxDbClient
         {
             return AddRawTag(name, string.IsNullOrEmpty(value)
                 ? value
-                : value.Replace("\"", string.Empty).Replace(" ", "\\ ").Replace(",", "\\,"));
+                : EscapeStringValue(value));
         }
 
-        public InfluxPoint AddRawTag(string name, string value)
+        private InfluxPoint AddRawTag(string name, string value)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();
 
-            _tags.Add(name, value);
+            _tags.Add(EscapeStringValue(name), value);
 
             return this;
         }
@@ -82,14 +82,17 @@ namespace MyInfluxDbClient
 
         public InfluxPoint AddField(string name, string value)
         {
+            if(!string.IsNullOrEmpty(value))
+                value = EscapeStringValue(value);
+
             return AddRawField(name, $"\"{value ?? string.Empty}\"");
         }
 
-        public InfluxPoint AddRawField(string name, string value)
+        private InfluxPoint AddRawField(string name, string value)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();
 
-            _fields.Add(name, value);
+            _fields.Add(EscapeStringValue(name), value);
 
             return this;
         }
@@ -108,6 +111,11 @@ namespace MyInfluxDbClient
             TimeStampResolution = resolution ?? TimeStampResolutions.Default;
 
             return this;
+        }
+
+        private static string EscapeStringValue(string value)
+        {
+            return value.Replace("\"", string.Empty).Replace(" ", "\\ ").Replace(",", "\\,");
         }
     }
 }

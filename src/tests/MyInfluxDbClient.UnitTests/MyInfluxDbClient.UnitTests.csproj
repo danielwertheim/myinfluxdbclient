@@ -54,6 +54,8 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="HourResolutionTests.cs" />
+    <Compile Include="InfluxPointTests.cs" />
+    <Compile Include="Shoulds\InfluxPointShoulds.cs" />
     <Compile Include="TestData\InfluxPointsTestData.cs" />
     <Compile Include="InfluxPointsTests.cs" />
     <Compile Include="MicrosecondsResolutionTests.cs" />
