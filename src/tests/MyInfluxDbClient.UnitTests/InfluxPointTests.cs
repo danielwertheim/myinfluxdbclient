@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using MyInfluxDbClient.Protocols;
 using MyInfluxDbClient.UnitTests.Shoulds;
 using NUnit.Framework;
 
@@ -161,6 +162,49 @@ namespace MyInfluxDbClient.UnitTests
                 .AddField("Test", "\"quoted\"");
 
             SUT.ShouldContainField("Test", "\\\"quoted\\\"");
+        }
+
+        [Test]
+        public void AddTimeStamp_Should_set_to_now_with_default_resolution_When_nothing_is_specified()
+        {
+            var expexted = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
+
+            SUT = new InfluxPoint("Test");
+
+            SUT.AddTimeStamp();
+
+            SUT.TimeStamp.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
+            SUT.TimeStampResolution.Should().Be(TimeStampResolutions.Default);
+        }
+
+        [Test]
+        public void AddTimeStamp_Should_set_to_now_and_to_provided_resolution_When_only_resolution_is_specified()
+        {
+            var expexted = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
+
+            SUT = new InfluxPoint("Test");
+
+            SUT.AddTimeStamp(TimeStampResolutions.Seconds);
+
+            SUT.TimeStamp.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
+            SUT.TimeStampResolution.Should().Be(TimeStampResolutions.Seconds);
+        }
+
+        [Test]
+        public void AddTimeStamp_Should_set_to_provided_values_When_time_stamp_and_resolution_is_specified()
+        {
+            var initial = new DateTime(2010, 1, 1, 23, 54, 11);
+            var expexted = TimeSpan.FromTicks(initial.ToUniversalTime().Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
+
+            SUT = new InfluxPoint("Test");
+
+            SUT.AddTimeStamp(initial, TimeStampResolutions.Seconds);
+
+            SUT.TimeStamp.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
+            SUT.TimeStampResolution.Should().Be(TimeStampResolutions.Seconds);
         }
 
         private InfluxPoint CreatePoint()

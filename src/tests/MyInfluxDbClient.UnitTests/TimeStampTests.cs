@@ -9,34 +9,34 @@ namespace MyInfluxDbClient.UnitTests
         [Test]
         public void Now_Should_return_TimeStamp_with_UTC_ticks_from_epoch()
         {
-            var expexted = UnixDateTime.Now();
+            var expexted = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
 
             var ts = TimeStamp.Now();
 
-            var r = new DateTime(ts.Ticks);
-            r.Should().BeCloseTo(expexted);
+            ts.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
         }
 
         [Test]
         public void From_Should_give_TimeStamp_with_UTC_ticks_from_epoch_When_a_non_UTC_date_time_is_passed()
         {
-            var expexted = UnixDateTime.Now();
+            var expexted = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
 
             var ts = TimeStamp.From(DateTime.Now);
 
-            var r = new DateTime(ts.Ticks);
-            r.Should().BeCloseTo(expexted);
+            ts.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
         }
 
         [Test]
         public void From_Should_give_TimeStamp_with_UTC_ticks_from_epoch_When_an_UTC_date_time_is_passed()
         {
-            var expexted = UnixDateTime.Now();
+            var expexted = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+            var margin = expexted.Add(TimeSpan.FromSeconds(1));
 
             var ts = TimeStamp.From(DateTime.UtcNow);
 
-            var r = new DateTime(ts.Ticks);
-            r.Should().BeCloseTo(expexted);
+            ts.Ticks.Should().BeInRange(expexted.Ticks, margin.Ticks);
         }
 
         [Test]

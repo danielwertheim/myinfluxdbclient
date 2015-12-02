@@ -58,6 +58,7 @@
     <Compile Include="HourResolution.cs" />
     <Compile Include="IInfluxPointsSerializer.cs" />
     <Compile Include="InfluxDbClient.cs" />
+    <Compile Include="InfluxDbEnvironment.cs" />
     <Compile Include="Protocols\LineProtocolInfluxPointsSerializer.cs" />
     <Compile Include="Protocols\LineProtocolFormat.cs" />
     <Compile Include="InfluxDbClientException.cs" />

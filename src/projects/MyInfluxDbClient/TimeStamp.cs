@@ -12,8 +12,8 @@ namespace MyInfluxDbClient
             Ticks = ticks;
         }
 
-        public static TimeStamp Now() => new TimeStamp(DateTime.UtcNow.Ticks - LineProtocolFormat.EpochTicks);
-        public static TimeStamp From(DateTime value) => new TimeStamp(value.ToUniversalTime().Ticks - LineProtocolFormat.EpochTicks);
+        public static TimeStamp Now() => new TimeStamp(DateTime.UtcNow.Ticks - InfluxDbEnvironment.EpochTicks);
+        public static TimeStamp From(DateTime value) => new TimeStamp(value.ToUniversalTime().Ticks - InfluxDbEnvironment.EpochTicks);
 
         public override bool Equals(object obj)
         {
