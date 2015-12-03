@@ -3,18 +3,22 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using EnsureThat;
 using MyInfluxDbClient.Extensions;
+using MyInfluxDbClient.Net;
 using MyInfluxDbClient.Protocols;
 using Requester;
 using Requester.Http;
 
 namespace MyInfluxDbClient
 {
-    public class InfluxDbClient : IDisposable
+    public class InfluxDbClient : IDisposable, IInfluxDbClient
     {
         private HttpRequester _requester;
 
         protected bool IsDisposed { get; private set; }
         protected IInfluxPointsSerializer InfluxPointsSerializer { get; set; }
+        protected IWriteOptionsUrlArgsBuilder WriteOptionsUrlArgsBuilder { get; set; }
+
+        public WriteOptions DefaultWriteOptions { get; }
 
         public InfluxDbClient(string serverUrl)
         {
@@ -22,6 +26,13 @@ namespace MyInfluxDbClient
 
             _requester = new HttpRequester(serverUrl);
             InfluxPointsSerializer = new LineProtocolInfluxPointsSerializer();
+            DefaultWriteOptions = CreateDefaultOptions();
+            WriteOptionsUrlArgsBuilder = new WriteOptionsUrlArgsBuilder();
+        }
+
+        private static WriteOptions CreateDefaultOptions()
+        {
+            return new WriteOptions();
         }
 
         public void Dispose()
@@ -56,14 +67,15 @@ namespace MyInfluxDbClient
             EnsureSuccessful(response);
         }
 
-        public async Task WriteAsync(string dbName, InfluxPoints points)
+        public async Task WriteAsync(string dbName, InfluxPoints points, WriteOptions options = null)
         {
             Ensure.That(dbName, nameof(dbName)).IsNotNullOrWhiteSpace();
             Ensure.That(points, nameof(points)).IsNotNull();
             Ensure.That(points.IsEmpty, nameof(points)).WithExtraMessageOf(() => "Can not write empty points collections.").IsFalse();
 
             var bytesContent = GetBytesContent(points);
-            var request = new HttpRequest(HttpMethod.Post, $"write?db={dbName}")
+            var writeOptionUrlArgs = WriteOptionsUrlArgsBuilder.Build(options ?? DefaultWriteOptions);
+            var request = new HttpRequest(HttpMethod.Post, $"write?db={dbName}{writeOptionUrlArgs}")
                 .WithContent(bytesContent);
 
             var response = await _requester.SendAsync(request).ForAwait();

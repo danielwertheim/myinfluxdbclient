@@ -67,6 +67,8 @@
     <Compile Include="TimeStampTests.cs" />
     <Compile Include="UnitTestsOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WriteOptionsTests.cs" />
+    <Compile Include="WriteOptionsUrlArgsBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\projects\MyInfluxDbClient\MyInfluxDbClient.csproj">
