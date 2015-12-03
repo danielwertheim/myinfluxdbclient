@@ -27,8 +27,20 @@ namespace MrLab
 
             using (var client = new InfluxDbClient("http://192.168.1.176:9086"))
             {
+                //configure write options on client (if you want)
+                client.DefaultWriteOptions
+                    .SetRetentionPolicy("test")
+                    .SetTimeStampPrecision(TimeStampPrecision.Minutes)
+                    .SetConsistency(Consistency.Quorum);
+
                 await client.CreateDbAsync("mydb");
                 await client.WriteAsync("mydb", points);
+
+                //specific options can be passed
+                var writeOptions = new WriteOptions()
+                    .SetConsistency(Consistency.Any);
+
+                await client.WriteAsync("mydb", points, writeOptions);
             }
         }
 
