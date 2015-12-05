@@ -21,6 +21,15 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void Build_Should_encode_rp_value_When_specifying_retention_policy()
+        {
+            var options = new WriteOptions()
+                .SetRetentionPolicy("test of this");
+
+            SUT.Build(options).Should().Be("&rp=test%20of%20this");
+        }
+
+        [Test]
         public void Build_Should_include_consistency_value_When_specifying_consistency()
         {
             var options = new WriteOptions()

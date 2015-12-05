@@ -14,7 +14,7 @@ namespace MyInfluxDbClient.Net
             if (!string.IsNullOrWhiteSpace(options.RetentionPolicy))
             {
                 sb.Append("&rp=");
-                sb.Append(options.RetentionPolicy);
+                sb.Append(UrlEncoder.Encode(options.RetentionPolicy));
             }
 
             if (options.Consistency.HasValue)
