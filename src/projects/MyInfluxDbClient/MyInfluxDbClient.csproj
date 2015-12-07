@@ -61,7 +61,11 @@
     <Compile Include="IInfluxPointsSerializer.cs" />
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
+    <Compile Include="Responses\ErrorResult.cs" />
+    <Compile Include="Responses\InfluxDbErrorResponse.cs" />
+    <Compile Include="Responses\InfluxDbResponse.cs" />
     <Compile Include="IWriteOptionsUrlArgsBuilder.cs" />
+    <Compile Include="Net\UrlEncoder.cs" />
     <Compile Include="Protocols\LineProtocolInfluxPointsSerializer.cs" />
     <Compile Include="Protocols\LineProtocolFormat.cs" />
     <Compile Include="InfluxDbClientException.cs" />
@@ -72,6 +76,8 @@
     <Compile Include="MinuteResolution.cs" />
     <Compile Include="NanosecondsResolution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\SerieResult.cs" />
+    <Compile Include="Responses\SerieResultItem.cs" />
     <Compile Include="SecondsResolution.cs" />
     <Compile Include="Protocols\StringBuilderLineProtocolWriter.cs" />
     <Compile Include="TimeStamp.cs" />
@@ -84,6 +90,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -33,7 +33,7 @@ namespace MrLab
                     .SetTimeStampPrecision(TimeStampPrecision.Minutes)
                     .SetConsistency(Consistency.Quorum);
 
-                await client.CreateDbAsync("mydb");
+                await client.CreateDatabaseAsync("mydb");
                 await client.WriteAsync("mydb", points);
 
                 //specific options can be passed

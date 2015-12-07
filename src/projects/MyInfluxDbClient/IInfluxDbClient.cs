@@ -6,7 +6,11 @@ namespace MyInfluxDbClient
     {
         WriteOptions DefaultWriteOptions { get; }
 
-        Task CreateDbAsync(string dbName);
-        Task WriteAsync(string dbName, InfluxPoints points, WriteOptions options = null);
+        Task CreateDatabaseAsync(string databaseName);
+        Task DropDatabaseAsync(string databaseName);
+        Task<bool> DatabaseExistsAsync(string databaseName);
+        Task<string[]> GetDatabaseNamesAsync();
+
+        Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }
 }

@@ -15,8 +15,8 @@ namespace MyInfluxDbClient
         public string Reason { get; private set; }
         public string Content { get; private set; }
 
-        internal InfluxDbClientException(HttpTextResponse response)
-            : this(response.RequestMethod, response.StatusCode, response.RequestUri, response.Reason, response.Content)
+        internal InfluxDbClientException(HttpTextResponse response, string reason = null)
+            : this(response.RequestMethod, response.StatusCode, response.RequestUri, reason ?? response.Reason, response.Content)
         { }
 
         public InfluxDbClientException(HttpMethod httpMethod, HttpStatusCode httpStatus, Uri uri, string reason, string content)

@@ -4,17 +4,20 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
 {
-    public abstract class IntegrationTestsOf<TSut> : IDisposable
+    public abstract class IntegrationTests : IDisposable
     {
-        protected TSut SUT { get; set; }
+        protected InfluxDbClient Client { get; set; }
 
-        protected IntegrationTestsOf() { }
+        protected IntegrationTests()
+        {
+            Client = new InfluxDbClient(IntegrationTestsRuntime.Host);
+        }
 
         [DebuggerStepThrough]
         public void Dispose()
         {
-            var sutAsDisposable = SUT as IDisposable;
-            sutAsDisposable?.Dispose();
+            Client?.Dispose();
+            Client = null;
         }
 
         [SetUp]
