@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     argv = require('yargs').argv,
     sequence = require('run-sequence');
 
-var ver = '0.1.0',
+var ver = '0.2.0',
     config = {
         srcdir: './../',
         projects: ['MyInfluxDbClient'],
@@ -38,6 +38,7 @@ gulp.task('ci', function (cb) {
         ['init-tools', 'clean', 'assemblyinfo', 'nuget-restore'],
         'build',
         'unit-tests',
+        'integration-tests',
         'copy',        
         'nuget-pack',
         cb);
@@ -80,6 +81,11 @@ gulp.task('copy', function() {
 
 gulp.task('unit-tests', function () {
     return gulp.src(config.srcdir + 'tests/**/bin/' + config.build.profile + '/*.UnitTests.dll')
+        .pipe(shell(config.tools.nunit + ' <%= file.path %> --noresult'));
+});
+
+gulp.task('integration-tests', function () {
+    return gulp.src(config.srcdir + 'tests/**/bin/' + config.build.profile + '/*.IntegrationTests.dll')
         .pipe(shell(config.tools.nunit + ' <%= file.path %> --noresult'));
 });
 
