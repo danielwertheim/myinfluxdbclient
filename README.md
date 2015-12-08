@@ -6,7 +6,7 @@ It's under continous developement, but can already be used to perform various da
 ## Roadmap
 Track all features etc. via the [Issues](https://github.com/danielwertheim/myinfluxdbclient/issues) & [Milestones](https://github.com/danielwertheim/myinfluxdbclient/milestones).
 
-The version will be `pre v1.0.0` until the milestones: [Gecko](https://github.com/danielwertheim/myinfluxdbclient/milestones/Gecko) and [Schema exploration](https://github.com/danielwertheim/myinfluxdbclient/milestones/Schema%20exploration); are done. Potentially also [Digger].(https://github.com/danielwertheim/myinfluxdbclient/milestones/Digger)
+The version will be `pre v1.0.0` until the milestones: [Gecko](https://github.com/danielwertheim/myinfluxdbclient/milestones/Gecko) and [Schema exploration](https://github.com/danielwertheim/myinfluxdbclient/milestones/Schema%20exploration); are done. Potentially also [Digger](https://github.com/danielwertheim/myinfluxdbclient/milestones/Digger)
 
 ## Getting setup
 All operations are currently located on `InfluxDbClient` which extends the interface `IInfluxDbClient`. Internally it makes use of [Requester](https://github.com/danielwertheim/requester) to perform all HTTP-requests.
@@ -79,7 +79,7 @@ var points = new InfluxPoints()
 		.AddTag("cur", "USD")
 		.AddField("amt", 10.0)
 		.AddField("fee", 2.5)
-		.AddTimeStamp(DateTime.Now)) //Is converted to nanoseconds since Epoch (UTC)
+		.AddTimeStamp(DateTime.Now)) //Conv. to nanoseconds since Epoch (UTC)
 	.Add(new InfluxPoint("ticketsold")
 		.AddTag("seller", "2")
 		.AddTag("cur", "EUR")
@@ -90,7 +90,10 @@ var points = new InfluxPoints()
 await client.WriteAsync("mydb", points);
 ```
 
+## WriteOptions
 There are some `WriteOptions` that you can configure either per-client or per call to `WriteAsync`.
+
+**Note** These are just formatted according to [documentation](https://influxdb.com/docs/v0.9/write_protocols/write_syntax.html#http).
 
 ### WriteOptions per client (optional)
 ```csharp
