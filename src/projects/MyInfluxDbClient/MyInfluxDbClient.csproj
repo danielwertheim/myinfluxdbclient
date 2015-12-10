@@ -56,12 +56,14 @@
     </Compile>
     <Compile Include="Commands\AlterRetentionPolicy.cs" />
     <Compile Include="Consistency.cs" />
+    <Compile Include="DropSeriesQuery.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
     <Compile Include="HourResolution.cs" />
     <Compile Include="IInfluxDbClient.cs" />
     <Compile Include="IInfluxPointsSerializer.cs" />
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
+    <Compile Include="IQuery.cs" />
     <Compile Include="Responses\ErrorResult.cs" />
     <Compile Include="Responses\InfluxDbErrorResponse.cs" />
     <Compile Include="Responses\InfluxDbResponse.cs" />
@@ -79,11 +81,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\RetentionPolicyItem.cs" />
     <Compile Include="Meta\RetentionPolicySchema.cs" />
+    <Compile Include="Responses\SerieItem.cs" />
     <Compile Include="Responses\SerieResult.cs" />
     <Compile Include="Commands\CreateRetentionPolicy.cs" />
     <Compile Include="RetentionPolicyDuration.cs" />
     <Compile Include="SecondsResolution.cs" />
     <Compile Include="Protocols\StringBuilderLineProtocolWriter.cs" />
+    <Compile Include="SeriesQuery.cs" />
+    <Compile Include="ShowSeriesQuery.cs" />
     <Compile Include="TimeStamp.cs" />
     <Compile Include="TimeStampPrecision.cs" />
     <Compile Include="TimeStampResolution.cs" />

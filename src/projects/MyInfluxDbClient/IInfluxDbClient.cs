@@ -19,6 +19,10 @@ namespace MyInfluxDbClient
         Task<RetentionPolicyItem[]> GetRetentionPoliciesAsync(string databaseName);
         Task<string> GetRetentionPoliciesJsonAsync(string databaseName);
 
+        Task DropSeriesAsync(DropSeriesQuery query);
+        Task<SerieItem[]> GetSeriesAsync(ShowSeriesQuery query);
+        Task<string> GetSeriesJsonAsync(ShowSeriesQuery query);
+
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }
 }
