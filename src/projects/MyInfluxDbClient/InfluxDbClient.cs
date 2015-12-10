@@ -2,9 +2,12 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using EnsureThat;
+using MyInfluxDbClient.Commands;
 using MyInfluxDbClient.Extensions;
+using MyInfluxDbClient.Meta;
 using MyInfluxDbClient.Net;
 using MyInfluxDbClient.Protocols;
 using MyInfluxDbClient.Responses;
@@ -96,13 +99,102 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
+            var json = await GetDatabaseNamesJsonAsync().ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+
+            return data.Results.SingleOrDefault()?.Series.SingleOrDefault()?.Values.Select(v => v.First.ToString()).ToArray();
+        }
+
+        public async Task<string> GetDatabaseNamesJsonAsync()
+        {
+            ThrowIfDisposed();
+
             var request = CreateQRequest("show databases");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
-            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(response.Content);
+            return response.Content;
+        }
 
-            return data.Results.SingleOrDefault()?.Series.SingleOrDefault()?.Values.Select(v => v.First.ToString()).ToArray();
+        public async Task CreateRetentionPolicyAsync(string databaseName, CreateRetentionPolicy policy)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            Ensure.That(policy, nameof(policy)).IsNotNull();
+
+            var defaultString = policy.MakeDefault.HasValue && policy.MakeDefault.Value ? " default" : string.Empty;
+            var request = CreateQRequest($"create retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)} duration {policy.Duration} replication {policy.Replication}{defaultString}");
+
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulDbOp(response);
+        }
+
+        public async Task AlterRetentionPolicyAsync(string databaseName, AlterRetentionPolicy policy)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            Ensure.That(policy, nameof(policy)).IsNotNull();
+
+            var cmd = new StringBuilder();
+            cmd.Append($"alter retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)}");
+            if (policy.Duration != null)
+                cmd.Append($" duration {policy.Duration}");
+            if(policy.Replication.HasValue)
+                cmd.Append($" replication {policy.Replication.Value}");
+            if (policy.MakeDefault.HasValue && policy.MakeDefault.Value)
+                cmd.Append(" default");
+
+            var request = CreateQRequest(cmd.ToString());
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulDbOp(response);
+        }
+
+        public async Task DropRetentionPolicyAsync(string databaseName, string policyName)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            Ensure.That(policyName, nameof(policyName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateQRequest($"drop retention policy {UrlEncoder.Encode(policyName)} on {UrlEncoder.Encode(databaseName)}");
+
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulDbOp(response);
+        }
+
+        public async Task<RetentionPolicyItem[]> GetRetentionPoliciesAsync(string databaseName)
+        {
+            ThrowIfDisposed();
+
+            var json = await GetRetentionPoliciesJsonAsync(databaseName).ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            var serie = data.Results.SingleOrDefault()?.Series.SingleOrDefault();
+            if (serie == null || !serie.Values.Any())
+                return new RetentionPolicyItem[0];
+
+            var schema = serie.GetSchemaOrdinals();
+            return serie.Values.Select(value => new RetentionPolicyItem
+            {
+                Name = value[schema[RetentionPolicySchema.Name]].ToObject<string>(),
+                Duration = value[schema[RetentionPolicySchema.Duration]].ToObject<string>(),
+                ReplicaN = value[schema[RetentionPolicySchema.ReplicaN]].ToObject<int>(),
+                IsDefault = value[schema[RetentionPolicySchema.IsDefault]].ToObject<bool>()
+            }).ToArray();
+        }
+
+        public async Task<string> GetRetentionPoliciesJsonAsync(string databaseName)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateQRequest($"show retention policies on {UrlEncoder.Encode(databaseName)}");
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulRead(response);
+
+            return response.Content;
         }
 
         public async Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null)
