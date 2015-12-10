@@ -80,7 +80,6 @@
     <Compile Include="Responses\RetentionPolicyItem.cs" />
     <Compile Include="Meta\RetentionPolicySchema.cs" />
     <Compile Include="Responses\SerieResult.cs" />
-    <Compile Include="Responses\SerieResultItem.cs" />
     <Compile Include="Commands\CreateRetentionPolicy.cs" />
     <Compile Include="RetentionPolicyDuration.cs" />
     <Compile Include="SecondsResolution.cs" />

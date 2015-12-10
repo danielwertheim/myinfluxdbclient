@@ -168,6 +168,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
             var json = await GetRetentionPoliciesJsonAsync(databaseName).ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
             var serie = data.Results.SingleOrDefault()?.Series.SingleOrDefault();
