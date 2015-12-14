@@ -123,6 +123,42 @@ Currently, the ops throws if InfluxDB returns failures. There will be additional
 
 - `client.GetRetentionPoliciesAsync(dbName):Task<RetentionPolicyItem[]>`
 - `client.GetRetentionPoliciesJsonAsync(dbName):Task<string>`
-- `client.CreateRetentionPolicyAsync(dbName, policy):Task;`
-- `client.AlterRetentionPolicyAsync(dbName, policy):Task;`
+- `client.CreateRetentionPolicyAsync(dbName, cmd):Task;`
+- `client.AlterRetentionPolicyAsync(dbName, cmd):Task;`
 - `client.DropRetentionPolicyAsync(dbName, policyName):Task;`
+
+## Series
+
+- `client.DropSeriesAsync(dbName, cmd):Task`
+- `client.GetSeriesAsync(dbName, cmd):Task<Dictionary<string, SerieItem[]>>`
+- `client.GetSeriesJsonAsync(dbName, cmd):Task<string>`
+
+### SeriesQuery
+To define what series you want, you pass in a `SeriesQuery` instance. On it, you basically specify a `From` and a `Where` clause.
+
+```csharp
+var query = new GetSeriesQuery()
+    .FromMeasurement("orderCreated")
+	.WhereTags("orderid='1' and shop='s123');
+var series = await client.GetSeriesAsync(dbName, query);
+```
+
+### The Result
+You will be returned a dictionary, where the key consists of the name of the measurement, then each value is represented by:
+
+```csharp
+public class SerieItem
+{
+    public string SerieKey { get; set; }
+    public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
+}
+```
+
+Where the `SerieKey` is the value returned by `_key` from `InfluxDB`; and `Tags` the tags for the serie. E.g.
+
+```
+SerieKey: "orderCreated,orderid='1',shop='s123'"
+Tags:
+	{"orderId", "1"}
+	{"shop", "s123"}
+```

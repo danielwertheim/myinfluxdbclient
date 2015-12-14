@@ -5,6 +5,6 @@ namespace MyInfluxDbClient.Responses
     public class SerieItem
     {
         public string Key { get; set; }
-        public Dictionary<string, string> Tags { get; set; }
+        public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
     }
 }

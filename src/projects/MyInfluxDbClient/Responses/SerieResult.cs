@@ -5,7 +5,7 @@ namespace MyInfluxDbClient.Responses
 {
     internal class SerieResult
     {
-        internal List<Item> Series { get; set; } = new List<Item>();
+        public List<Item> Series { get; set; } = new List<Item>();
 
         internal class Item
         {
@@ -13,7 +13,7 @@ namespace MyInfluxDbClient.Responses
             public List<string> Columns { get; set; } = new List<string>();
             public List<JToken> Values { get; set; } = new List<JToken>();
 
-            public Dictionary<string, int> GetSchemaOrdinals()
+            internal Dictionary<string, int> GetSchemaOrdinals()
             {
                 var schema = new Dictionary<string, int>();
 

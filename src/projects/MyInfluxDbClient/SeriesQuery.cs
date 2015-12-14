@@ -1,9 +1,10 @@
 using System.Text;
 using EnsureThat;
+using MyInfluxDbClient.Net;
 
 namespace MyInfluxDbClient
 {
-    public abstract class SeriesQuery : IQuery
+    public abstract class SeriesQuery<T> : IQuery where T : SeriesQuery<T>
     {
         public string Command { get; }
         public string From { get; private set; }
@@ -16,25 +17,25 @@ namespace MyInfluxDbClient
             Command = command;
         }
 
-        public SeriesQuery FromMeasurement(string measurement)
+        public T FromMeasurement(string measurement)
         {
             Ensure.That(measurement, nameof(measurement)).IsNotNullOrWhiteSpace();
 
             From = measurement;
 
-            return this;
+            return this as T;
         }
 
-        public SeriesQuery WhereTags(string tagPredicate)
+        public T WhereTags(string tagPredicate)
         {
             Ensure.That(tagPredicate, nameof(tagPredicate)).IsNotNullOrWhiteSpace();
 
             Where = tagPredicate;
 
-            return this;
+            return this as T;
         }
 
-        public string Generate()
+        public virtual string Generate()
         {
             var sb = new StringBuilder();
 
@@ -42,7 +43,9 @@ namespace MyInfluxDbClient
             if (!string.IsNullOrWhiteSpace(From))
             {
                 sb.Append(" from ");
-                sb.Append(From);
+                sb.Append("\"");
+                sb.Append(UrlEncoder.Encode(From));
+                sb.Append("\"");
             }
 
             if (!string.IsNullOrWhiteSpace(Where))

@@ -37,7 +37,6 @@ namespace MyInfluxDbClient.IntegrationTests
             var alterPolicy = new AlterRetentionPolicy(createPolicy.Name)
             {
                 Replication = 2,
-                MakeDefault = true,
                 Duration = RetentionPolicyDuration.Hours(10)
             };
             await Client.AlterRetentionPolicyAsync(_databaseName, alterPolicy);
@@ -46,7 +45,7 @@ namespace MyInfluxDbClient.IntegrationTests
             refetched = policies.SingleOrDefault(p => p.Name == createPolicy.Name);
             refetched.Should().NotBeNull();
             refetched.ReplicaN.Should().Be(alterPolicy.Replication);
-            refetched.IsDefault.Should().BeTrue();
+            refetched.IsDefault.Should().BeFalse();
             refetched.Duration.Should().NotBeNullOrWhiteSpace();
 
             await Client.DropRetentionPolicyAsync(_databaseName, createPolicy.Name);
