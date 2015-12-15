@@ -2,9 +2,9 @@
 {
     internal static class RetentionPolicySchema
     {
-        public const string Name = "name";
-        public const string Duration = "duration";
-        public const string ReplicaN = "replicaN";
-        public const string IsDefault = "default";
+        internal const string Name = "name";
+        internal const string Duration = "duration";
+        internal const string ReplicaN = "replicaN";
+        internal const string IsDefault = "default";
     }
 }

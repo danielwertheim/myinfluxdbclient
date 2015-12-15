@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyInfluxDbClient.Commands;
 using MyInfluxDbClient.Responses;
@@ -18,6 +19,10 @@ namespace MyInfluxDbClient
         Task DropRetentionPolicyAsync(string databaseName, string policyName);
         Task<RetentionPolicyItem[]> GetRetentionPoliciesAsync(string databaseName);
         Task<string> GetRetentionPoliciesJsonAsync(string databaseName);
+
+        Task DropSeriesAsync(string databaseName, DropSeriesQuery query);
+        Task<Dictionary<string, SerieItem[]>> GetSeriesAsync(string databaseName, GetSeriesQuery query = null);
+        Task<string> GetSeriesJsonAsync(string databaseName, GetSeriesQuery query = null);
 
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }
