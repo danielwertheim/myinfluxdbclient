@@ -21,6 +21,9 @@ namespace MyInfluxDbClient
         Task<Series> GetSeriesAsync(string databaseName, GetSeries query = null);
         Task<string> GetSeriesJsonAsync(string databaseName, GetSeries query = null);
 
+        Task<FieldKeys> GetFieldKeysAsync(string databaseName, string measurement = null);
+        Task<string> GetFieldKeysJsonAsync(string databaseName, string measurement = null);
+
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }
 }

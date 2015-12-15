@@ -34,7 +34,7 @@ namespace MyInfluxDbClient.IntegrationTests
         }
 
         [Test]
-        public async Task Should_map_key_and_tags()
+        public async Task Should_extract_key_and_tags_by_measurement()
         {
             var series = await Client.GetSeriesAsync(_databaseName);
 
@@ -42,6 +42,7 @@ namespace MyInfluxDbClient.IntegrationTests
             {
                 serieItem.Tags.Should().ContainKey("mid");
                 serieItem.Tags.Should().ContainKey("oid");
+                serieItem.Key.Should().Be($"orderCreated,mid={serieItem.Tags["mid"]},oid={serieItem.Tags["oid"]}");
             }
 
             foreach (var serieItem in series["paymentRecieved"])
@@ -49,6 +50,7 @@ namespace MyInfluxDbClient.IntegrationTests
                 serieItem.Tags.Should().ContainKey("mid");
                 serieItem.Tags.Should().ContainKey("oid");
                 serieItem.Tags.Should().ContainKey("pid");
+                serieItem.Key.Should().Be($"paymentRecieved,mid={serieItem.Tags["mid"]},oid={serieItem.Tags["oid"]},pid={serieItem.Tags["pid"]}");
             }
         }
 

@@ -58,6 +58,7 @@
     <Compile Include="Consistency.cs" />
     <Compile Include="DropSeries.cs" />
     <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="FieldKeys.cs" />
     <Compile Include="HourResolution.cs" />
     <Compile Include="IInfluxDbClient.cs" />
     <Compile Include="IInfluxPointsSerializer.cs" />

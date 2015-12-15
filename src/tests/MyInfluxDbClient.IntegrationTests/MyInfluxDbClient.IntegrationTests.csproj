@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="DbOpsTests.cs" />
     <Compile Include="DropSeriesTests.cs" />
+    <Compile Include="GetFieldKeysTests.cs" />
     <Compile Include="IntegrationTestsRuntime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IntegrationTests.cs" />
