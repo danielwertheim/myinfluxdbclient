@@ -4,7 +4,7 @@ using MyInfluxDbClient.Net;
 
 namespace MyInfluxDbClient
 {
-    public abstract class SeriesQuery<T> : IQuery where T : SeriesQuery<T>
+    public abstract class SeriesQuery<T> where T : SeriesQuery<T>
     {
         public string Command { get; }
         public string From { get; private set; }
