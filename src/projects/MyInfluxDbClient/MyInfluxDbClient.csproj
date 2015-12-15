@@ -86,6 +86,7 @@
     <Compile Include="Responses\SerieResult.cs" />
     <Compile Include="CreateRetentionPolicy.cs" />
     <Compile Include="Series.cs" />
+    <Compile Include="TagKeys.cs" />
     <Compile Include="Tags.cs" />
     <Compile Include="RetentionPolicyDuration.cs" />
     <Compile Include="SecondsResolution.cs" />

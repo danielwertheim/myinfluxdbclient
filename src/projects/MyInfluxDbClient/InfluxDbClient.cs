@@ -306,6 +306,48 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
+        public async Task<TagKeys> GetTagKeysAsync(string databaseName, string measurement = null)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var result = new TagKeys();
+
+            var json = await GetTagKeysJsonAsync(databaseName, measurement).ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            if (data?.Results == null || !data.Results.Any())
+                return result;
+
+            foreach (var serie in data.Results.SelectMany(r => r.Series))
+                result.Add(serie.Name, serie.Values.Select(value => value.First.ToObject<string>()).ToArray());
+
+            return result;
+        }
+
+        public async Task<string> GetTagKeysJsonAsync(string databaseName, string measurement = null)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var q = new StringBuilder();
+            q.Append("show tag keys");
+            if (!string.IsNullOrWhiteSpace(measurement))
+            {
+                q.Append(" from ");
+                q.Append("\"");
+                q.Append(UrlEncoder.Encode(measurement));
+                q.Append("\"");
+            }
+
+            var request = CreateCommandRequest(q.ToString(), databaseName);
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulRead(response);
+
+            return response.Content;
+        }
+
         public async Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null)
         {
             ThrowIfDisposed();
