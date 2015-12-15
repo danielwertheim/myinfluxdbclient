@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyInfluxDbClient.Commands;
-using MyInfluxDbClient.Responses;
 
 namespace MyInfluxDbClient
 {
@@ -20,9 +17,9 @@ namespace MyInfluxDbClient
         Task<RetentionPolicyItem[]> GetRetentionPoliciesAsync(string databaseName);
         Task<string> GetRetentionPoliciesJsonAsync(string databaseName);
 
-        Task DropSeriesAsync(string databaseName, DropSeriesQuery query);
-        Task<Dictionary<string, SerieItem[]>> GetSeriesAsync(string databaseName, GetSeriesQuery query = null);
-        Task<string> GetSeriesJsonAsync(string databaseName, GetSeriesQuery query = null);
+        Task DropSeriesAsync(string databaseName, DropSeries query);
+        Task<Series> GetSeriesAsync(string databaseName, GetSeries query = null);
+        Task<string> GetSeriesJsonAsync(string databaseName, GetSeries query = null);
 
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }

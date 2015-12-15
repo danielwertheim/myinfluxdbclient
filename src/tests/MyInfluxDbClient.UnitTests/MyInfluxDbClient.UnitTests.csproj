@@ -53,13 +53,13 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\DropSeriesQueryTests.cs" />
+    <Compile Include="DropSeriesTests.cs" />
     <Compile Include="HourResolutionTests.cs" />
     <Compile Include="InfluxPointTests.cs" />
     <Compile Include="RetentionPolicyDurationTests.cs" />
-    <Compile Include="Commands\RetentionPolicyTests.cs" />
+    <Compile Include="RetentionPolicyTests.cs" />
     <Compile Include="Shoulds\InfluxPointShoulds.cs" />
-    <Compile Include="Commands\GetSeriesQueryTests.cs" />
+    <Compile Include="GetSeriesTests.cs" />
     <Compile Include="TestData\InfluxPointsTestData.cs" />
     <Compile Include="InfluxPointsTests.cs" />
     <Compile Include="MicrosecondsResolutionTests.cs" />

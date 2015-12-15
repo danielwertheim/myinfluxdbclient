@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using EnsureThat;
-using MyInfluxDbClient.Commands;
 using MyInfluxDbClient.Extensions;
 using MyInfluxDbClient.Meta;
 using MyInfluxDbClient.Net;
@@ -200,7 +198,7 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
-        public async Task DropSeriesAsync(string databaseName, DropSeriesQuery query)
+        public async Task DropSeriesAsync(string databaseName, DropSeries query)
         {
             ThrowIfDisposed();
 
@@ -212,13 +210,13 @@ namespace MyInfluxDbClient
             EnsureSuccessful(response);
         }
 
-        public async Task<Dictionary<string, SerieItem[]>> GetSeriesAsync(string databaseName, GetSeriesQuery query = null)
+        public async Task<Series> GetSeriesAsync(string databaseName, GetSeries query = null)
         {
             ThrowIfDisposed();
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
-            var result = new Dictionary<string, SerieItem[]>();
+            var result = new Series();
 
             var json = await GetSeriesJsonAsync(databaseName, query).ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
@@ -251,13 +249,13 @@ namespace MyInfluxDbClient
             return result;
         }
 
-        public async Task<string> GetSeriesJsonAsync(string databaseName, GetSeriesQuery query = null)
+        public async Task<string> GetSeriesJsonAsync(string databaseName, GetSeries query = null)
         {
             ThrowIfDisposed();
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
-            query = query ?? new GetSeriesQuery();
+            query = query ?? new GetSeries();
 
             var request = CreateCommandRequest(query.Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();

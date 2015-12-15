@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyInfluxDbClient.Commands;
 using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests

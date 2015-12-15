@@ -1,6 +1,6 @@
 using EnsureThat;
 
-namespace MyInfluxDbClient.Commands
+namespace MyInfluxDbClient
 {
     public class CreateRetentionPolicy
     {

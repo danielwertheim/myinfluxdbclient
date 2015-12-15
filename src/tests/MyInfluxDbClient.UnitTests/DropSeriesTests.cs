@@ -1,16 +1,15 @@
 ﻿using System;
 using FluentAssertions;
-using MyInfluxDbClient.Commands;
 using NUnit.Framework;
 
-namespace MyInfluxDbClient.UnitTests.Commands
+namespace MyInfluxDbClient.UnitTests
 {
-    public class DropSeriesQueryTests : UnitTestsOf<DropSeriesQuery>
+    public class DropSeriesTests : UnitTestsOf<DropSeries>
     {
         [Test]
         public void IsValid_Should_return_false_When_neither_From_nor_Where_has_been_defined()
         {
-            SUT = new DropSeriesQuery();
+            SUT = new DropSeries();
 
             SUT.IsValid().Should().BeFalse();
         }
@@ -18,17 +17,17 @@ namespace MyInfluxDbClient.UnitTests.Commands
         [Test]
         public void IsValid_Should_return_true_When_either_From_or_Where_has_been_defined()
         {
-            SUT = new DropSeriesQuery().FromMeasurement("test");
+            SUT = new DropSeries().FromMeasurement("test");
             SUT.IsValid().Should().BeTrue();
 
-            SUT = new DropSeriesQuery().WhereTags("test='asdf'");
+            SUT = new DropSeries().WhereTags("test='asdf'");
             SUT.IsValid().Should().BeTrue();
         }
 
         [Test]
         public void Generate_Should_return_drop_series_When_constructed_empty()
         {
-            SUT = new DropSeriesQuery();
+            SUT = new DropSeries();
 
             SUT.Invoking(sut => sut.Generate()).ShouldThrow<InvalidOperationException>();
         }
@@ -36,7 +35,7 @@ namespace MyInfluxDbClient.UnitTests.Commands
         [Test]
         public void Generate_Should_return_drop_series_with_measurement_When_from_is_specified()
         {
-            SUT = new DropSeriesQuery().FromMeasurement("orderCreated");
+            SUT = new DropSeries().FromMeasurement("orderCreated");
 
             SUT.Generate().Should().Be("drop series from \"orderCreated\"");
         }
@@ -44,7 +43,7 @@ namespace MyInfluxDbClient.UnitTests.Commands
         [Test]
         public void Generate_Should_return_drop_series_with_where_When_where_is_specified()
         {
-            SUT = new DropSeriesQuery().WhereTags("merchant='foo'");
+            SUT = new DropSeries().WhereTags("merchant='foo'");
 
             SUT.Generate().Should().Be("drop series where merchant='foo'");
         }
@@ -52,7 +51,7 @@ namespace MyInfluxDbClient.UnitTests.Commands
         [Test]
         public void Generate_Should_return_drop_series_with_from_and_where_When_from_and_where_are_specified()
         {
-            SUT = new DropSeriesQuery().FromMeasurement("orderCreated").WhereTags("merchant='foo'");
+            SUT = new DropSeries().FromMeasurement("orderCreated").WhereTags("merchant='foo'");
 
             SUT.Generate().Should().Be("drop series from \"orderCreated\" where merchant='foo'");
         }

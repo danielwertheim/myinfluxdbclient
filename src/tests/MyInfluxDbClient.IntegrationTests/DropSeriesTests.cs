@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using MyInfluxDbClient.Commands;
 using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
@@ -23,7 +22,7 @@ namespace MyInfluxDbClient.IntegrationTests
                 .Add(new InfluxPoint(measurementName).AddTag("tag1", "one").AddField("amt", 100M));
             await Client.WriteAsync(_databaseName, points);
 
-            await Client.DropSeriesAsync(_databaseName, new DropSeriesQuery().FromMeasurement(measurementName));
+            await Client.DropSeriesAsync(_databaseName, new DropSeries().FromMeasurement(measurementName));
 
             var series = await Client.GetSeriesAsync(_databaseName);
             series.Should().NotContainKey(measurementName);
@@ -37,7 +36,7 @@ namespace MyInfluxDbClient.IntegrationTests
                 .Add(new InfluxPoint(measurementName).AddTag("tag1", "one").AddField("amt", 100M));
             await Client.WriteAsync(_databaseName, points);
 
-            await Client.DropSeriesAsync(_databaseName, new DropSeriesQuery().WhereTags("tag1 = 'one'"));
+            await Client.DropSeriesAsync(_databaseName, new DropSeries().WhereTags("tag1 = 'one'"));
 
             var series = await Client.GetSeriesAsync(_databaseName);
             series.Should().NotContainKey(measurementName);
@@ -51,7 +50,7 @@ namespace MyInfluxDbClient.IntegrationTests
                 .Add(new InfluxPoint(measurementName).AddTag("tag1", "one").AddField("amt", 100M));
             await Client.WriteAsync(_databaseName, points);
 
-            await Client.DropSeriesAsync(_databaseName, new DropSeriesQuery().FromMeasurement(measurementName + "foo"));
+            await Client.DropSeriesAsync(_databaseName, new DropSeries().FromMeasurement(measurementName + "foo"));
 
             var series = await Client.GetSeriesAsync(_databaseName);
             series.Should().ContainKey(measurementName);

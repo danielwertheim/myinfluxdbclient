@@ -1,9 +1,8 @@
 ﻿using System;
 using FluentAssertions;
-using MyInfluxDbClient.Commands;
 using NUnit.Framework;
 
-namespace MyInfluxDbClient.UnitTests.Commands
+namespace MyInfluxDbClient.UnitTests
 {
     public class RetentionPolicyTests : UnitTestsOf<CreateRetentionPolicy>
     {

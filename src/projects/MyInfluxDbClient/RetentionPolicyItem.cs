@@ -1,4 +1,4 @@
-﻿namespace MyInfluxDbClient.Responses
+﻿namespace MyInfluxDbClient
 {
     public class RetentionPolicyItem
     {
