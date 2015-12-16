@@ -17,9 +17,9 @@ namespace MyInfluxDbClient
         Task<RetentionPolicyItem[]> GetRetentionPoliciesAsync(string databaseName);
         Task<string> GetRetentionPoliciesJsonAsync(string databaseName);
 
-        Task DropSeriesAsync(string databaseName, DropSeries query);
-        Task<Series> GetSeriesAsync(string databaseName, GetSeries query = null);
-        Task<string> GetSeriesJsonAsync(string databaseName, GetSeries query = null);
+        Task DropSeriesAsync(string databaseName, DropSeries command);
+        Task<Series> GetSeriesAsync(string databaseName, ShowSeries command = null);
+        Task<string> GetSeriesJsonAsync(string databaseName, ShowSeries command = null);
 
         Task<FieldKeys> GetFieldKeysAsync(string databaseName, string measurement = null);
         Task<string> GetFieldKeysJsonAsync(string databaseName, string measurement = null);

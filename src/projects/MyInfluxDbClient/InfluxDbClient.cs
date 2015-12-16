@@ -198,19 +198,19 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
-        public async Task DropSeriesAsync(string databaseName, DropSeries query)
+        public async Task DropSeriesAsync(string databaseName, DropSeries command)
         {
             ThrowIfDisposed();
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(query, nameof(query)).IsNotNull();
+            Ensure.That(command, nameof(command)).IsNotNull();
 
-            var request = CreateCommandRequest(query.Generate(), databaseName);
+            var request = CreateCommandRequest(command.Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
 
-        public async Task<Series> GetSeriesAsync(string databaseName, GetSeries query = null)
+        public async Task<Series> GetSeriesAsync(string databaseName, ShowSeries command = null)
         {
             ThrowIfDisposed();
 
@@ -218,7 +218,7 @@ namespace MyInfluxDbClient
 
             var result = new Series();
 
-            var json = await GetSeriesJsonAsync(databaseName, query).ForAwait();
+            var json = await GetSeriesJsonAsync(databaseName, command).ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
             if (data?.Results == null || !data.Results.Any())
                 return result;
@@ -249,15 +249,15 @@ namespace MyInfluxDbClient
             return result;
         }
 
-        public async Task<string> GetSeriesJsonAsync(string databaseName, GetSeries query = null)
+        public async Task<string> GetSeriesJsonAsync(string databaseName, ShowSeries command = null)
         {
             ThrowIfDisposed();
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
-            query = query ?? new GetSeries();
+            command = command ?? new ShowSeries();
 
-            var request = CreateCommandRequest(query.Generate(), databaseName);
+            var request = CreateCommandRequest(command.Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 

@@ -92,7 +92,7 @@
     <Compile Include="SecondsResolution.cs" />
     <Compile Include="Protocols\StringBuilderLineProtocolWriter.cs" />
     <Compile Include="SeriesQuery.cs" />
-    <Compile Include="GetSeries.cs" />
+    <Compile Include="ShowSeries.cs" />
     <Compile Include="TimeStamp.cs" />
     <Compile Include="TimeStampPrecision.cs" />
     <Compile Include="TimeStampResolution.cs" />

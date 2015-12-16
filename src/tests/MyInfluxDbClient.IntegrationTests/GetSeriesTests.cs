@@ -68,13 +68,13 @@ namespace MyInfluxDbClient.IntegrationTests
         [Test]
         public async Task Should_return_by_measurement_When_from_measurement_is_specified()
         {
-            var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new GetSeries().FromMeasurement("orderCreated"));
+            var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("orderCreated"));
             orderCreatedItems.Should().HaveCount(1);
             orderCreatedItems.Should().ContainKey("orderCreated");
             orderCreatedItems["orderCreated"].Should().HaveSameCount(_seededOrderCreatedKeys);
             orderCreatedItems["orderCreated"].Select(i => i.Key).Should().Contain(_seededOrderCreatedKeys);
 
-            var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new GetSeries().FromMeasurement("paymentRecieved"));
+            var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("paymentRecieved"));
             paymentRecievedItems.Should().HaveCount(1);
             paymentRecievedItems.Should().ContainKey("paymentRecieved");
             paymentRecievedItems["paymentRecieved"].Should().HaveSameCount(_seededPaymentRecievedKeys);
@@ -84,7 +84,7 @@ namespace MyInfluxDbClient.IntegrationTests
         [Test]
         public async Task Should_return_by_tag_When_where_tags_are_specified()
         {
-            var items = await Client.GetSeriesAsync(_databaseName, new GetSeries().WhereTags("oid='1' and mid='1'"));
+            var items = await Client.GetSeriesAsync(_databaseName, new ShowSeries().WhereTags("oid='1' and mid='1'"));
 
             var values = items.SelectMany(i => i.Value).ToArray();
             values.Should().HaveCount(3);
@@ -94,8 +94,8 @@ namespace MyInfluxDbClient.IntegrationTests
         [Test]
         public async Task Should_return_by_measurement_and_tag_When_from_measurement_and_where_tag_are_specified()
         {
-            var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new GetSeries().FromMeasurement("orderCreated").WhereTags("mid='2'"));
-            var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new GetSeries().FromMeasurement("paymentRecieved").WhereTags("oid='1' and mid='1'"));
+            var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("orderCreated").WhereTags("mid='2'"));
+            var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("paymentRecieved").WhereTags("oid='1' and mid='1'"));
 
             orderCreatedItems["orderCreated"].Should().HaveCount(1);
             orderCreatedItems["orderCreated"].Should().Contain(i => i.Key == "orderCreated,mid=2,oid=3");
