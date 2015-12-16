@@ -115,29 +115,44 @@ await client.WriteAsync("mydb", points, writeOptions);
 Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations e.g. `EnsureDatabaseExistsAsync(dbName)` that will not throw if a database already exists.
 
 - `client.GetDatabaseNamesAsync():Task<string[]>` - returns an array of database name. **Note!** All databases are returned, even system databases.
-- `client.DatabaseExistsAsync(dbName):Task<bool>` -  checks if a database exists. Note. Makes use of `GetDatabaseNamesAsync` to compare.
-- `client.CreateDatabaseAsync(dbName):Task` - create a database. **Note!** Throws if the database already exists.
-- `client.DropDatabaseAsync(dbName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
+- `client.DatabaseExistsAsync(databaseName):Task<bool>` -  checks if a database exists. Note. Makes use of `GetDatabaseNamesAsync` to compare.
+- `client.CreateDatabaseAsync(databaseName):Task` - create a database. **Note!** Throws if the database already exists.
+- `client.DropDatabaseAsync(databaseName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
 
 ## Retention policies
 
-- `client.GetRetentionPoliciesAsync(dbName):Task<RetentionPolicyItem[]>`
-- `client.GetRetentionPoliciesJsonAsync(dbName):Task<string>`
-- `client.CreateRetentionPolicyAsync(dbName, cmd):Task;`
-- `client.AlterRetentionPolicyAsync(dbName, cmd):Task;`
-- `client.DropRetentionPolicyAsync(dbName, policyName):Task;`
+- `client.GetRetentionPoliciesAsync(databaseName):Task<RetentionPolicyItem[]>`
+- `client.GetRetentionPoliciesJsonAsync(databaseName):Task<string>`
+- `client.CreateRetentionPolicyAsync(databaseName, cmd):Task;`
+- `client.AlterRetentionPolicyAsync(databaseName, cmd):Task;`
+- `client.DropRetentionPolicyAsync(databaseName, policyName):Task;`
 
 ## Series
 
-- `client.DropSeriesAsync(dbName, cmd):Task`
-- `client.GetSeriesAsync(dbName, cmd):Task<Dictionary<string, SerieItem[]>>`
-- `client.GetSeriesJsonAsync(dbName, cmd):Task<string>`
+- `client.DropSeriesAsync(databaseName, cmd):Task`
+- `client.GetSeriesAsync(databaseName, [cmd]):Task<Dictionary<string, SerieItem[]>>`
+- `client.GetSeriesJsonAsync(databaseName, [cmd]):Task<string>`
+
+## Fields
+
+- `client.GetFieldKeysAsync(databaseName, [measurement]):Task<FieldKeys>`
+- `client.GetFieldKeysJsonAsync(databaseName, [measurement]):Task<string>`
+
+## Tags
+
+- `client.GetTagKeysAsync(string databaseName, [measurement]):Task<TagKeys>`
+- `client.GetTagKeysJsonAsync(string databaseName, [measurement]):Task<string>`
+
+## Measurements
+
+- `client.GetMeasurementsAsync(string databaseName, [cmd]):Task<TagKeys>`
+- `client.GetMeasurementsJsonAsync(string databaseName, [cmd]):Task<string>`
 
 ### SeriesQuery
-To define what series you want, you pass in a `SeriesQuery` instance. On it, you basically specify a `From` and a `Where` clause.
+To define what series you want, you pass in a `ShowSeries` instance. On it, you basically specify a `From` and a `Where` clause.
 
 ```csharp
-var query = new GetSeriesQuery()
+var query = new ShowSeries()
     .FromMeasurement("orderCreated")
 	.WhereTags("orderid='1' and shop='s123');
 var series = await client.GetSeriesAsync(dbName, query);
@@ -149,15 +164,15 @@ You will be returned a dictionary, where the key consists of the name of the mea
 ```csharp
 public class SerieItem
 {
-    public string SerieKey { get; set; }
-    public Dictionary<string, string> Tags { get; set; } = new Dictionary<string, string>();
+    public string Key { get; set; }
+    public Tags Tags { get; set; }
 }
 ```
 
-Where the `SerieKey` is the value returned by `_key` from `InfluxDB`; and `Tags` the tags for the serie. E.g.
+Where the `Key` is the value returned by `_key` from `InfluxDB`; and `Tags` the tags for the serie. E.g.
 
 ```
-SerieKey: "orderCreated,orderid='1',shop='s123'"
+Key: "orderCreated,orderid='1',shop='s123'"
 Tags:
 	{"orderId", "1"}
 	{"shop", "s123"}
