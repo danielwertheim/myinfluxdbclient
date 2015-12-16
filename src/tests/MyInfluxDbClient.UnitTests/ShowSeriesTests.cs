@@ -6,7 +6,7 @@ namespace MyInfluxDbClient.UnitTests
     public class ShowSeriesTests : UnitTestsOf<ShowSeries>
     {
         [Test]
-        public void Generate_Should_return_drop_series_When_constructed_empty()
+        public void Generate_Should_return_show_series_When_constructed_empty()
         {
             SUT = new ShowSeries();
 
@@ -14,7 +14,7 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void Generate_Should_return_drop_series_with_measurement_When_from_is_specified()
+        public void Generate_Should_return_show_series_with_measurement_When_from_is_specified()
         {
             SUT = new ShowSeries().FromMeasurement("orderCreated");
 
@@ -22,7 +22,7 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void Generate_Should_return_drop_series_with_where_When_where_is_specified()
+        public void Generate_Should_return_show_series_with_where_When_where_is_specified()
         {
             SUT = new ShowSeries().WhereTags("merchant='foo'");
 
@@ -30,7 +30,7 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void Generate_Should_return_drop_series_with_from_and_where_When_from_and_where_are_specified()
+        public void Generate_Should_return_show_series_with_from_and_where_When_from_and_where_are_specified()
         {
             SUT = new ShowSeries().FromMeasurement("orderCreated").WhereTags("merchant='foo'");
 
