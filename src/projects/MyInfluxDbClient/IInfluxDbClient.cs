@@ -27,6 +27,9 @@ namespace MyInfluxDbClient
         Task<TagKeys> GetTagKeysAsync(string databaseName, string measurement = null);
         Task<string> GetTagKeysJsonAsync(string databaseName, string measurement = null);
 
+        Task<Measurements> GetMeasurementsAsync(string databaseName, ShowMeasurements command = null);
+        Task<string> GetMeasurementsJsonAsync(string databaseName, ShowMeasurements command = null);
+
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }
 }

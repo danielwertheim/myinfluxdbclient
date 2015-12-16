@@ -348,6 +348,16 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
+        public Task<Measurements> GetMeasurementsAsync(string databaseName, ShowMeasurements command = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetMeasurementsJsonAsync(string databaseName, ShowMeasurements command = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null)
         {
             ThrowIfDisposed();

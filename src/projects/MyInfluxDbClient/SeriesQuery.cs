@@ -26,11 +26,11 @@ namespace MyInfluxDbClient
             return this as T;
         }
 
-        public T WhereTags(string tagPredicate)
+        public T WhereTags(string predicate)
         {
-            Ensure.That(tagPredicate, nameof(tagPredicate)).IsNotNullOrWhiteSpace();
+            Ensure.That(predicate, nameof(predicate)).IsNotNullOrWhiteSpace();
 
-            Where = tagPredicate;
+            Where = predicate;
 
             return this as T;
         }

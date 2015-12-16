@@ -64,6 +64,8 @@
     <Compile Include="IInfluxPointsSerializer.cs" />
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
+    <Compile Include="Measurements.cs" />
+    <Compile Include="ShowMeasurements.cs" />
     <Compile Include="Meta\SerieSchema.cs" />
     <Compile Include="Responses\ErrorResult.cs" />
     <Compile Include="Responses\InfluxDbErrorResponse.cs" />

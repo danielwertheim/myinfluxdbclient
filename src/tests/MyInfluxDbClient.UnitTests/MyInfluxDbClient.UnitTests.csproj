@@ -59,6 +59,7 @@
     <Compile Include="RetentionPolicyDurationTests.cs" />
     <Compile Include="RetentionPolicyTests.cs" />
     <Compile Include="Shoulds\InfluxPointShoulds.cs" />
+    <Compile Include="ShowMeasurementsTests.cs" />
     <Compile Include="ShowSeriesTests.cs" />
     <Compile Include="TestData\InfluxPointsTestData.cs" />
     <Compile Include="InfluxPointsTests.cs" />
