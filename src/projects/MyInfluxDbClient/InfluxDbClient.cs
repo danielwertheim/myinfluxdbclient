@@ -348,14 +348,36 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
-        public Task<Measurements> GetMeasurementsAsync(string databaseName, ShowMeasurements command = null)
+        public async Task<Measurements> GetMeasurementsAsync(string databaseName, ShowMeasurements command = null)
         {
-            throw new NotImplementedException();
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var result = new Measurements();
+
+            var json = await GetMeasurementsJsonAsync(databaseName, command).ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            if (data?.Results == null || !data.Results.Any())
+                return result;
+
+            foreach (var serie in data.Results.SelectMany(r => r.Series))
+                result.AddRange(serie.Values.Select(value => value.First.ToObject<string>()).ToArray());
+
+            return result;
         }
 
-        public Task<string> GetMeasurementsJsonAsync(string databaseName, ShowMeasurements command = null)
+        public async Task<string> GetMeasurementsJsonAsync(string databaseName, ShowMeasurements command = null)
         {
-            throw new NotImplementedException();
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateCommandRequest((command ?? new ShowMeasurements()).Generate(), databaseName);
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulRead(response);
+
+            return response.Content;
         }
 
         public async Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null)
