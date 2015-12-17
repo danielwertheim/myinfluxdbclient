@@ -94,14 +94,21 @@ namespace MyInfluxDbClient
             return databaseNames.Contains(databaseName);
         }
 
-        public async Task<string[]> GetDatabaseNamesAsync()
+        public async Task<Databases> GetDatabaseNamesAsync()
         {
             ThrowIfDisposed();
 
+            var result = new Databases();
+
             var json = await GetDatabaseNamesJsonAsync().ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            if (data?.Results == null || !data.Results.Any())
+                return result;
 
-            return data.Results.SingleOrDefault()?.Series.SingleOrDefault()?.Values.Select(v => v.First.ToString()).ToArray();
+            foreach (var serie in data.Results.SelectMany(r => r.Series))
+                result.AddRange(serie.Values.Select(value => value.First.ToObject<string>()).ToArray());
+
+            return result;
         }
 
         public async Task<string> GetDatabaseNamesJsonAsync()
@@ -255,9 +262,7 @@ namespace MyInfluxDbClient
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
-            command = command ?? new ShowSeries();
-
-            var request = CreateCommandRequest(command.Generate(), databaseName);
+            var request = CreateCommandRequest((command ?? new ShowSeries()).Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
