@@ -89,18 +89,18 @@ namespace MyInfluxDbClient
 
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
-            var databaseNames = await GetDatabaseNamesAsync().ForAwait();
+            var databaseNames = await GetDatabasesAsync().ForAwait();
 
             return databaseNames.Contains(databaseName);
         }
 
-        public async Task<Databases> GetDatabaseNamesAsync()
+        public async Task<Databases> GetDatabasesAsync()
         {
             ThrowIfDisposed();
 
             var result = new Databases();
 
-            var json = await GetDatabaseNamesJsonAsync().ForAwait();
+            var json = await GetDatabasesJsonAsync().ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
             if (data?.Results == null || !data.Results.Any())
                 return result;
@@ -111,7 +111,7 @@ namespace MyInfluxDbClient
             return result;
         }
 
-        public async Task<string> GetDatabaseNamesJsonAsync()
+        public async Task<string> GetDatabasesJsonAsync()
         {
             ThrowIfDisposed();
 

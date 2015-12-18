@@ -9,8 +9,8 @@ namespace MyInfluxDbClient
         Task CreateDatabaseAsync(string databaseName);
         Task DropDatabaseAsync(string databaseName);
         Task<bool> DatabaseExistsAsync(string databaseName);
-        Task<Databases> GetDatabaseNamesAsync();
-        Task<string> GetDatabaseNamesJsonAsync();
+        Task<Databases> GetDatabasesAsync();
+        Task<string> GetDatabasesJsonAsync();
 
         Task CreateRetentionPolicyAsync(string databaseName, CreateRetentionPolicy policy);
         Task AlterRetentionPolicyAsync(string databaseName, AlterRetentionPolicy policy);

@@ -19,7 +19,7 @@ namespace MyInfluxDbClient.IntegrationTests
         {
             using (var client = new InfluxDbClient(Host))
             {
-                var dbNames = client.GetDatabaseNamesAsync().Result;
+                var dbNames = client.GetDatabasesAsync().Result;
                 foreach (var databaseName in dbNames.Where(dbName => dbName.StartsWith(DatabaseName)))
                     client.DropDatabaseAsync(databaseName).Wait();
 
