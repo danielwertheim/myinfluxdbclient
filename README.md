@@ -6,8 +6,6 @@ It's under continous developement, but can already be used to perform various da
 ## Roadmap
 Track all features etc. via the [Issues](https://github.com/danielwertheim/myinfluxdbclient/issues) & [Milestones](https://github.com/danielwertheim/myinfluxdbclient/milestones).
 
-The version will be `pre v1.0.0` until the milestones: [Gecko](https://github.com/danielwertheim/myinfluxdbclient/milestones/Gecko) and [Schema exploration](https://github.com/danielwertheim/myinfluxdbclient/milestones/Schema%20exploration); are done. Potentially also [Digger](https://github.com/danielwertheim/myinfluxdbclient/milestones/Digger)
-
 ## Focus of the client
 The focus of this driver is of getting data into InfluxDB and to allow you to manage data/schemas. When it comes to queries, there will be support for queries returning typed objects as well as raw JSON. The queries will initially be defined using strings, hence no typed c# lambda expression trees or anything like it. 
 
@@ -112,10 +110,10 @@ await client.WriteAsync("mydb", points, writeOptions);
 ```
 
 ## Database operations
-Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations e.g. `EnsureDatabaseExistsAsync(dbName)` that will not throw if a database already exists.
+Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations that does not throw.
 
-- `client.GetDatabaseNamesAsync():Task<string[]>` - returns an array of database name. **Note!** All databases are returned, even system databases.
-- `client.DatabaseExistsAsync(databaseName):Task<bool>` -  checks if a database exists. Note. Makes use of `GetDatabaseNamesAsync` to compare.
+- `client.GetDatabasesAsync():Task<Databases>` - returns an array of database name. **Note!** All databases are returned, even system databases.
+- `client.DatabaseExistsAsync(databaseName):Task<bool>` -  checks if a database exists.
 - `client.CreateDatabaseAsync(databaseName):Task` - create a database. **Note!** Throws if the database already exists.
 - `client.DropDatabaseAsync(databaseName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
 
@@ -145,7 +143,7 @@ Currently, the ops throws if InfluxDB returns failures. There will be additional
 
 ## Measurements
 
-- `client.GetMeasurementsAsync(string databaseName, [cmd]):Task<TagKeys>`
+- `client.GetMeasurementsAsync(string databaseName, [cmd]):Task<Measurements>`
 - `client.GetMeasurementsJsonAsync(string databaseName, [cmd]):Task<string>`
 
 ### SeriesQuery
@@ -154,7 +152,7 @@ To define what series you want, you pass in a `ShowSeries` instance. On it, you 
 ```csharp
 var query = new ShowSeries()
     .FromMeasurement("orderCreated")
-	.WhereTags("orderid='1' and shop='s123');
+    .WhereTags("orderid='1' and shop='s123');
 var series = await client.GetSeriesAsync(dbName, query);
 ```
 
