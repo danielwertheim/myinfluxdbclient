@@ -8,6 +8,9 @@ Track all features etc. via the [Issues](https://github.com/danielwertheim/myinf
 
 The version will be `pre v1.0.0` until the milestones: [Gecko](https://github.com/danielwertheim/myinfluxdbclient/milestones/Gecko) and [Schema exploration](https://github.com/danielwertheim/myinfluxdbclient/milestones/Schema%20exploration); are done. Potentially also [Digger](https://github.com/danielwertheim/myinfluxdbclient/milestones/Digger)
 
+## Focus of the client
+The focus of this driver is of getting data into InfluxDB and to allow you to manage data/schemas. When it comes to queries, there will be support for queries returning typed objects as well as raw JSON. The queries will initially be defined using strings, hence no typed c# lambda expression trees or anything like it. 
+
 ## Getting setup
 All operations are currently located on `InfluxDbClient` which extends the interface `IInfluxDbClient`. Internally it makes use of [Requester](https://github.com/danielwertheim/requester) to perform all HTTP-requests.
 
@@ -44,14 +47,6 @@ public class InfluxDbClientException : Exception
 	...
 }
 ```
-
-## Database operations
-Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations e.g. `EnsureDatabaseExistsAsync(dbName)` that will not throw if a database already exists.
-
-- `client.GetDatabaseNamesAsync():Task<string[]>` - returns an array of database name. **Note!** All databases are returned, even system databases.
-- `client.DatabaseExistsAsync(dbName):Task<bool>` -  checks if a database exists. Note. Makes use of `GetDatabaseNamesAsync` to compare.
-- `client.CreateDatabaseAsync(dbName):Task` - create a database. **Note!** Throws if the database already exists.
-- `client.DropDatabaseAsync(dbName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
 
 ## Write points
 The `MyInfluxDbClient` makes use of the [Line Protocol](https://influxdb.com/docs/v0.9/write_protocols/line.html) when writing points.
@@ -114,4 +109,71 @@ var writeOptions = new WriteOptions()
 	.SetConsistency(Consistency.Any);
 
 await client.WriteAsync("mydb", points, writeOptions);
+```
+
+## Database operations
+Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations e.g. `EnsureDatabaseExistsAsync(dbName)` that will not throw if a database already exists.
+
+- `client.GetDatabaseNamesAsync():Task<string[]>` - returns an array of database name. **Note!** All databases are returned, even system databases.
+- `client.DatabaseExistsAsync(databaseName):Task<bool>` -  checks if a database exists. Note. Makes use of `GetDatabaseNamesAsync` to compare.
+- `client.CreateDatabaseAsync(databaseName):Task` - create a database. **Note!** Throws if the database already exists.
+- `client.DropDatabaseAsync(databaseName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
+
+## Retention policies
+
+- `client.GetRetentionPoliciesAsync(databaseName):Task<RetentionPolicyItem[]>`
+- `client.GetRetentionPoliciesJsonAsync(databaseName):Task<string>`
+- `client.CreateRetentionPolicyAsync(databaseName, cmd):Task;`
+- `client.AlterRetentionPolicyAsync(databaseName, cmd):Task;`
+- `client.DropRetentionPolicyAsync(databaseName, policyName):Task;`
+
+## Series
+
+- `client.DropSeriesAsync(databaseName, cmd):Task`
+- `client.GetSeriesAsync(databaseName, [cmd]):Task<Dictionary<string, SerieItem[]>>`
+- `client.GetSeriesJsonAsync(databaseName, [cmd]):Task<string>`
+
+## Fields
+
+- `client.GetFieldKeysAsync(databaseName, [measurement]):Task<FieldKeys>`
+- `client.GetFieldKeysJsonAsync(databaseName, [measurement]):Task<string>`
+
+## Tags
+
+- `client.GetTagKeysAsync(string databaseName, [measurement]):Task<TagKeys>`
+- `client.GetTagKeysJsonAsync(string databaseName, [measurement]):Task<string>`
+
+## Measurements
+
+- `client.GetMeasurementsAsync(string databaseName, [cmd]):Task<TagKeys>`
+- `client.GetMeasurementsJsonAsync(string databaseName, [cmd]):Task<string>`
+
+### SeriesQuery
+To define what series you want, you pass in a `ShowSeries` instance. On it, you basically specify a `From` and a `Where` clause.
+
+```csharp
+var query = new ShowSeries()
+    .FromMeasurement("orderCreated")
+	.WhereTags("orderid='1' and shop='s123');
+var series = await client.GetSeriesAsync(dbName, query);
+```
+
+### The Result
+You will be returned a dictionary, where the key consists of the name of the measurement, then each value is represented by:
+
+```csharp
+public class SerieItem
+{
+    public string Key { get; set; }
+    public Tags Tags { get; set; }
+}
+```
+
+Where the `Key` is the value returned by `_key` from `InfluxDB`; and `Tags` the tags for the serie. E.g.
+
+```
+Key: "orderCreated,orderid='1',shop='s123'"
+Tags:
+	{"orderId", "1"}
+	{"shop", "s123"}
 ```

@@ -15,13 +15,13 @@ namespace MyInfluxDbClient.IntegrationTests
 
             (await Client.DatabaseExistsAsync(databaseName)).Should().BeTrue();
 
-            (await Client.GetDatabaseNamesAsync()).Should().Contain(databaseName);
+            (await Client.GetDatabasesAsync()).Should().Contain(databaseName);
 
             await Client.DropDatabaseAsync(databaseName);
 
             (await Client.DatabaseExistsAsync(databaseName)).Should().BeFalse();
 
-            (await Client.GetDatabaseNamesAsync()).Should().NotContain(databaseName);
+            (await Client.GetDatabasesAsync()).Should().NotContain(databaseName);
         }
 
         [Test]

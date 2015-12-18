@@ -35,5 +35,18 @@ namespace MyInfluxDbClient.IntegrationTests
         [OneTimeTearDown]
         [DebuggerStepThrough]
         protected virtual void OnAfterAllTests() { }
+
+        protected string CreateUniqueTestDatabase()
+        {
+            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
+            Client.CreateDatabaseAsync(databaseName).Wait();
+
+            return databaseName;
+        }
+
+        protected void DropTestDatabase(string databaseName)
+        {
+            Client.DropDatabaseAsync(databaseName).Wait();
+        }
     }
 }
