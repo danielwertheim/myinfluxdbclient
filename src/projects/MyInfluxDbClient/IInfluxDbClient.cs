@@ -7,7 +7,9 @@ namespace MyInfluxDbClient
         WriteOptions DefaultWriteOptions { get; }
 
         Task CreateDatabaseAsync(string databaseName);
+        Task CreateDatabaseIfNotExistsAsync(string databaseName);
         Task DropDatabaseAsync(string databaseName);
+        Task DropDatabaseIfExistsAsync(string databaseName);
         Task<bool> DatabaseExistsAsync(string databaseName);
         Task<Databases> GetDatabasesAsync();
         Task<string> GetDatabasesJsonAsync();

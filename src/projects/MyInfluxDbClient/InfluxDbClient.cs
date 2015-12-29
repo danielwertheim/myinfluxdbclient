@@ -72,6 +72,17 @@ namespace MyInfluxDbClient
             EnsureSuccessful(response);
         }
 
+        public async Task CreateDatabaseIfNotExistsAsync(string databaseName)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateCommandRequest($"create database if not exists {UrlEncoder.Encode(databaseName)}");
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessful(response);
+        }
+
         public async Task DropDatabaseAsync(string databaseName)
         {
             ThrowIfDisposed();
@@ -79,6 +90,17 @@ namespace MyInfluxDbClient
             Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
 
             var request = CreateCommandRequest($"drop database {UrlEncoder.Encode(databaseName)}");
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessful(response);
+        }
+
+        public async Task DropDatabaseIfExistsAsync(string databaseName)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateCommandRequest($"drop database if exists {UrlEncoder.Encode(databaseName)}");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
@@ -147,7 +169,7 @@ namespace MyInfluxDbClient
             cmd.Append($"alter retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)}");
             if (policy.Duration != null)
                 cmd.Append($" duration {policy.Duration}");
-            if(policy.Replication.HasValue)
+            if (policy.Replication.HasValue)
                 cmd.Append($" replication {policy.Replication.Value}");
             if (policy.MakeDefault.HasValue && policy.MakeDefault.Value)
                 cmd.Append(" default");
@@ -243,7 +265,7 @@ namespace MyInfluxDbClient
 
                     for (var ci = 0; ci < serie.Columns.Count; ci++)
                     {
-                        if(ci == keyOrdinal)
+                        if (ci == keyOrdinal)
                             continue;
 
                         serieItem.Tags.Add(serie.Columns[ci], value[ci].ToObject<string>());
