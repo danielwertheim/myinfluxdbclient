@@ -7,7 +7,7 @@ namespace MyInfluxDbClient.IntegrationTests
     [SetUpFixture]
     public class IntegrationTestsRuntime
     {
-        public const string Host = "http://192.168.1.176:9086";
+        public const string Host = "http://192.168.1.168:9086";
         public const string DatabaseName = "int_tests_main";
 
         public static string GenerateUniqueDatabaseName()

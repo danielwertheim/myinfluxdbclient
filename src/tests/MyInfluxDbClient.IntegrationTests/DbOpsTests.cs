@@ -25,6 +25,26 @@ namespace MyInfluxDbClient.IntegrationTests
         }
 
         [Test]
+        public async Task CreateDatabaseIfNotExistsAsync_Should_create_database_When_database_does_not_exists()
+        {
+            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
+
+            await Client.CreateDatabaseIfNotExistsAsync(databaseName);
+
+            (await Client.DatabaseExistsAsync(databaseName)).Should().BeTrue();
+        }
+
+        [Test]
+        public async Task CreateDatabaseIfNotExistsAsync_Should_not_throw_When_database_already_exists()
+        {
+            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
+
+            await Client.CreateDatabaseAsync(databaseName);
+
+            await Client.CreateDatabaseIfNotExistsAsync(databaseName);
+        }
+
+        [Test]
         public async Task CreateDatabaseAsync_Should_throw_When_database_already_exists()
         {
             var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
