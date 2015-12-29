@@ -94,6 +94,17 @@ namespace MyInfluxDbClient
             EnsureSuccessful(response);
         }
 
+        public async Task DropDatabaseIfExistsAsync(string databaseName)
+        {
+            ThrowIfDisposed();
+
+            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+
+            var request = CreateCommandRequest($"drop database if exists {UrlEncoder.Encode(databaseName)}");
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessful(response);
+        }
+
         public async Task<bool> DatabaseExistsAsync(string databaseName)
         {
             ThrowIfDisposed();
