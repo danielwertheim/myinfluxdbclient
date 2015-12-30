@@ -6,6 +6,8 @@ namespace MyInfluxDbClient
     {
         WriteOptions DefaultWriteOptions { get; }
 
+        void UseBasicAuth(string username, string password);
+
         Task CreateDatabaseAsync(string databaseName);
         Task CreateDatabaseIfNotExistsAsync(string databaseName);
         Task DropDatabaseAsync(string databaseName);

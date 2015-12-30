@@ -24,14 +24,21 @@ namespace MyInfluxDbClient
 
         public WriteOptions DefaultWriteOptions { get; }
 
-        public InfluxDbClient(string host)
-        {
-            Ensure.That(host, nameof(host)).IsNotNullOrWhiteSpace();
+        public InfluxDbClient(string host) : this(new HttpRequester(host)) { }
 
-            Requester = new HttpRequester(host);
+        protected InfluxDbClient(HttpRequester requester)
+        {
+            Ensure.That(requester, nameof(requester)).IsNotNull();
+
+            Requester = requester;
             InfluxPointsSerializer = new LineProtocolInfluxPointsSerializer();
             DefaultWriteOptions = CreateDefaultWriteOptions();
             WriteOptionsUrlArgsBuilder = new WriteOptionsUrlArgsBuilder();
+        }
+
+        public void UseBasicAuth(string username, string password)
+        {
+            Requester.Config.WithBasicAuthorization(username, password);
         }
 
         private static WriteOptions CreateDefaultWriteOptions()
