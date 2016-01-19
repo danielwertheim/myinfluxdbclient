@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     argv = require('yargs').argv,
     sequence = require('run-sequence');
 
-var ver = '0.5.0',
+var ver = '0.6.0',
     config = {
         srcdir: './../',
         projects: ['MyInfluxDbClient'],
