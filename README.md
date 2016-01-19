@@ -28,6 +28,13 @@ using (var client = new InfluxDbClient("http://192.168.1.176:8086"))
 
 you are now ready to start consuming it. See below for available operations.
 
+## Authentication
+From `v0.5.0` you can make use of basic authentication:
+
+```csharp
+client.UseBasicAuth(username, password);
+```
+
 ## Exceptions
 Simple argument validation will throw either `ArgumentException` or a derivate of it. This could be thrown if you e.g. pass `null` for an operation that requires a `databaseName` to be passed.
 
@@ -110,12 +117,13 @@ await client.WriteAsync("mydb", points, writeOptions);
 ```
 
 ## Database operations
-Currently, the ops throws if InfluxDB returns failures. There will be additional, complementary operations that does not throw.
 
 - `client.GetDatabasesAsync():Task<Databases>` - returns an array of database name. **Note!** All databases are returned, even system databases.
 - `client.DatabaseExistsAsync(databaseName):Task<bool>` -  checks if a database exists.
 - `client.CreateDatabaseAsync(databaseName):Task` - create a database. **Note!** Throws if the database already exists.
+- `client.CreateDatabaseIfNotExistsAsync(databaseName):Task` - creates a database if one doesn't exist already.
 - `client.DropDatabaseAsync(databaseName):Task` - drop an existing database. **Note!** Throws if the database does not exist.
+- `client.DropDatabaseIfExistsAsync(databaseName):Task` - drops an existing database if it exists.
 
 ## Retention policies
 
