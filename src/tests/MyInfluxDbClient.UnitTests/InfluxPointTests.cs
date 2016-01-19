@@ -89,6 +89,20 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void HasFields_Should_return_false_When_no_fields_exists()
+        {
+            SUT.HasFields.Should().BeFalse();
+        }
+
+        [Test]
+        public void HasFields_Should_return_true_When_fields_exists()
+        {
+            SUT.AddField("test", "test");
+
+            SUT.HasFields.Should().BeTrue();
+        }
+
+        [Test]
         public void AddTag_Should_add_string_value_When_string_is_passed()
         {
             SUT = CreatePoint()
