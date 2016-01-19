@@ -75,6 +75,20 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void HasTags_Should_return_false_When_no_tags_exists()
+        {
+            SUT.HasTags.Should().BeFalse();
+        }
+
+        [Test]
+        public void HasTags_Should_return_true_When_tags_exists()
+        {
+            SUT.AddTag("test", "test");
+
+            SUT.HasTags.Should().BeTrue();
+        }
+
+        [Test]
         public void AddTag_Should_add_string_value_When_string_is_passed()
         {
             SUT = CreatePoint()
