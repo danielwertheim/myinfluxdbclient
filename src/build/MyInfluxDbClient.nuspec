@@ -18,8 +18,8 @@
         <dependencies>
            <group targetFramework="net45">
              <dependency id="Ensure.That" version="4.0.0" />
-             <dependency id="Newtonsoft.Json" version="7.0.1" />
-             <dependency id="Requester" version="1.1.0" />
+             <dependency id="Newtonsoft.Json" version="8.0.2" />
+             <dependency id="Requester" version="1.2.0" />
            </group>
         </dependencies>
     </metadata>

@@ -14,6 +14,8 @@ namespace MyInfluxDbClient
         public string Measurement { get; }
         public TimeStamp TimeStamp { get; private set; }
         public TimeStampResolution TimeStampResolution { get; private set; }
+        public bool HasTags => _tags.Any();
+        public bool HasFields => _fields.Any();
         public IEnumerable<KeyValuePair<string, string>> Tags => _tags;
         public IEnumerable<KeyValuePair<string, string>> Fields => _fields;
 
