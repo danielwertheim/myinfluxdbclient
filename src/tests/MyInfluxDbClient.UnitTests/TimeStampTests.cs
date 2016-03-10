@@ -41,6 +41,30 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void ToUtcDateTime_Should_give_the_DateTime_used_to_create_it_as_UTC_When_non_UTC_was_passed()
+        {
+            var expected = DateTime.Now;
+            var timeStamp = TimeStamp.From(expected);
+
+            timeStamp
+                .ToUtcDateTime()
+                .ToLocalTime()
+                .Should().Be(expected);
+        }
+
+        [Test]
+        public void ToUtcDateTime_Should_give_the_DateTime_used_to_create_it_When_UTC_was_passed()
+        {
+            var expected = DateTime.UtcNow;
+            var timeStamp = TimeStamp.From(expected);
+
+            timeStamp
+                .ToUtcDateTime()
+                .Should()
+                .Be(expected);
+        }
+
+        [Test]
         public void Equals_Should_return_false_When_a_time_stamp_based_on_a_different_date_time_is_passed()
         {
             var now = DateTime.Now;

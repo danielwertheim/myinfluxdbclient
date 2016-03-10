@@ -1,5 +1,4 @@
 using System;
-using MyInfluxDbClient.Protocols;
 
 namespace MyInfluxDbClient
 {
@@ -30,6 +29,11 @@ namespace MyInfluxDbClient
         public override int GetHashCode()
         {
             return Ticks.GetHashCode();
+        }
+
+        public DateTime ToUtcDateTime()
+        {
+            return new DateTime(Ticks + InfluxDbEnvironment.EpochTicks, DateTimeKind.Utc);
         }
     }
 }
