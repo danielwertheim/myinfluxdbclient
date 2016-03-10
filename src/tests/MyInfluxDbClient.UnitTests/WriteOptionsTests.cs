@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public class WriteOptionsTests : UnitTestsOf<WriteOptions>
     {
         protected override void OnBeforeEachTest()

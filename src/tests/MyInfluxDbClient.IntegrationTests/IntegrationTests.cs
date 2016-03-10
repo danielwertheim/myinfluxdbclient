@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
 {
+    [TestFixture]
     public abstract class IntegrationTests : IDisposable
     {
         protected InfluxDbClient Client { get; set; }

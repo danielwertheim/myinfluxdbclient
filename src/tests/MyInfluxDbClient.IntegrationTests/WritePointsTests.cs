@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
 {
+    [TestFixture]
     public class WritePointsTests : IntegrationTests
     {
         [Test]

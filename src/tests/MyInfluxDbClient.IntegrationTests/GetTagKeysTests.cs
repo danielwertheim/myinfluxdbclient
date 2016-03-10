@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
 {
+    [TestFixture]
     public class GetTagKeysTests : IntegrationTests
     {
         private string _databaseName;

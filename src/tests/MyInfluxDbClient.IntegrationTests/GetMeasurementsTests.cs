@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.IntegrationTests
 {
+    [TestFixture]
     public class GetMeasurementsTests : IntegrationTests
     {
         private string _databaseName;

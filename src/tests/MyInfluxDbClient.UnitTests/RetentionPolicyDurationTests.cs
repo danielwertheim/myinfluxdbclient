@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public class RetentionPolicyDurationTests : UnitTestsOf<RetentionPolicyDuration>
     {
         [Test]

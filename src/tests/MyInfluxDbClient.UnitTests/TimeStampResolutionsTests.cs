@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public class TimeStampResolutionsTests : UnitTests
     {
         [Test]

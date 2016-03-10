@@ -4,9 +4,15 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public abstract class UnitTestsOf<TSut> : UnitTests, IDisposable
     {
         protected TSut SUT { get; set; }
+
+        protected UnitTestsOf()
+        {
+            SUT = default(TSut);
+        }
 
         [DebuggerStepThrough]
         public void Dispose()
@@ -16,6 +22,7 @@ namespace MyInfluxDbClient.UnitTests
         }
     }
 
+    [TestFixture]
     public abstract class UnitTests
     {
         [SetUp]

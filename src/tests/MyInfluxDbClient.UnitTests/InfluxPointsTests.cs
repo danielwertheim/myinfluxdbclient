@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public class InfluxPointsTests : UnitTestsOf<InfluxPoints>
     {
         protected override void OnBeforeEachTest()

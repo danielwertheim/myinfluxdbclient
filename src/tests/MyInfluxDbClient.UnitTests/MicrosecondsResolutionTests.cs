@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace MyInfluxDbClient.UnitTests
 {
+    [TestFixture]
     public class MicrosecondsResolutionTests : UnitTestsOf<MicrosecondsResolution>
     {
         public MicrosecondsResolutionTests()
