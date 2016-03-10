@@ -52,6 +52,68 @@ namespace MyInfluxDbClient
             return this;
         }
 
+        /// <summary>
+        /// Use specific AddField methods if you know the exact type
+        /// to get rid of boxing and unboxing.
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        public InfluxPoint AddFields(IDictionary<string, object> fields)
+        {
+            Ensure.That(fields, nameof(fields)).IsNotNull();
+
+            foreach (var field in fields)
+            {
+                if (field.Value is bool)
+                {
+                    AddField(field.Key, (bool)field.Value);
+                    continue;
+                }
+
+                if (field.Value is int)
+                {
+                    AddField(field.Key, (int)field.Value);
+                    continue;
+                }
+
+                if (field.Value is long)
+                {
+                    AddField(field.Key, (long)field.Value);
+                    continue;
+                }
+
+                if (field.Value is float)
+                {
+                    AddField(field.Key, (float)field.Value);
+                    continue;
+                }
+
+                if (field.Value is double)
+                {
+                    AddField(field.Key, (double)field.Value);
+                    continue;
+                }
+
+                if (field.Value is decimal)
+                {
+                    AddField(field.Key, (decimal)field.Value);
+                    continue;
+                }
+
+                if (field.Value is string)
+                {
+                    AddField(field.Key, (string)field.Value);
+                    continue;
+                }
+
+                throw new ArgumentException(
+                    $"Unsupported field type: '{field.Value.GetType().FullName}'; in key: '{field.Key}'",
+                    nameof(fields));
+            }
+
+            return this;
+        }
+
         public InfluxPoint AddField(string name, bool value)
         {
             return AddRawField(name, value ? LineProtocolFormat.Fields.TrueString : LineProtocolFormat.Fields.FalseString);
@@ -84,7 +146,7 @@ namespace MyInfluxDbClient
 
         public InfluxPoint AddField(string name, string value)
         {
-            if(!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 value = EscapeStringValue(value);
 
             return AddRawField(name, $"\"{value ?? string.Empty}\"");
