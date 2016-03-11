@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-﻿using System.Reflection;
+using System.Reflection;
 
 #if DEBUG
 [assembly: AssemblyProduct("MyInfluxDbClient (Debug)")]
