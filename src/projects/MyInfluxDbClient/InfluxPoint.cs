@@ -52,13 +52,7 @@ namespace MyInfluxDbClient
             return this;
         }
 
-        /// <summary>
-        /// Use specific AddField methods if you know the exact type
-        /// to get rid of boxing and unboxing.
-        /// </summary>
-        /// <param name="fields"></param>
-        /// <returns></returns>
-        public InfluxPoint AddFields(IDictionary<string, object> fields)
+        public InfluxPoint AddFields(IEnumerable<KeyValuePair<string, ValueType>> fields)
         {
             Ensure.That(fields, nameof(fields)).IsNotNull();
 
@@ -100,16 +94,18 @@ namespace MyInfluxDbClient
                     continue;
                 }
 
-                if (field.Value is string)
-                {
-                    AddField(field.Key, (string)field.Value);
-                    continue;
-                }
-
                 throw new ArgumentException(
                     $"Unsupported field type: '{field.Value.GetType().FullName}'; in key: '{field.Key}'",
                     nameof(fields));
             }
+
+            return this;
+        }
+
+        public InfluxPoint AddFields(IEnumerable<KeyValuePair<string, string>> fields)
+        {
+            foreach (var field in fields)
+                AddField(field.Key, field.Value);
 
             return this;
         }

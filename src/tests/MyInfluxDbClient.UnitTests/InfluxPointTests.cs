@@ -225,9 +225,9 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
-        public void AddFields_Should_add_specific_strings_When_values_are_passed_as_objects()
+        public void AddFields_Should_add_specific_strings_When_values_are_passed_as_value_types()
         {
-            SUT = CreatePoint().AddFields(new Dictionary<string, object>
+            SUT = CreatePoint().AddFields(new Dictionary<string, ValueType>
             {
                 { "test_true_bool", true },
                 { "test_false_bool", false },
@@ -235,8 +235,7 @@ namespace MyInfluxDbClient.UnitTests
                 { "test_long", (long)52 },
                 { "test_float", (float)52.33},
                 { "test_double", 53.33},
-                { "test_decimal", (decimal)54.33 },
-                { "Test of string", "mystring" }
+                { "test_decimal", (decimal)54.33 }
             });
 
             SUT.Fields.ShouldBeEquivalentTo(new Dictionary<string, string>
@@ -247,8 +246,23 @@ namespace MyInfluxDbClient.UnitTests
                 { "test_long", 52.ToString(LineProtocolFormat.FormatProvider) + LineProtocolFormat.Fields.IntegerSuffix },
                 { "test_float", ((float)52.33).ToString(LineProtocolFormat.FormatProvider) },
                 { "test_double", 53.33.ToString(LineProtocolFormat.FormatProvider) },
-                { "test_decimal", ((decimal)54.33).ToString(LineProtocolFormat.FormatProvider) },
-                { "Test\\ of\\ string", "\"mystring\"" }
+                { "test_decimal", ((decimal)54.33).ToString(LineProtocolFormat.FormatProvider) }
+            });
+        }
+
+        [Test]
+        public void AddFields_Should_add_specific_strings_When_values_are_passed_as_strings()
+        {
+            SUT = CreatePoint().AddFields(new Dictionary<string, string>
+            {
+                { "Test of string1", "mystring1" },
+                { "Test of string2", "mystring2" }
+            });
+
+            SUT.Fields.ShouldBeEquivalentTo(new Dictionary<string, string>
+            {
+                { "Test\\ of\\ string1", "\"mystring1\"" },
+                { "Test\\ of\\ string2", "\"mystring2\"" }
             });
         }
 
