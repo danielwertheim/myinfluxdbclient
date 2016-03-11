@@ -43,6 +43,14 @@ namespace MyInfluxDbClient
                 : EscapeStringValue(value));
         }
 
+        public InfluxPoint AddTags(IEnumerable<KeyValuePair<string, string>> fields)
+        {
+            foreach (var field in fields)
+                AddTag(field.Key, field.Value);
+
+            return this;
+        }
+
         private InfluxPoint AddRawTag(string name, string value)
         {
             Ensure.That(name, nameof(name)).IsNotNullOrWhiteSpace();

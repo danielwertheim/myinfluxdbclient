@@ -156,6 +156,23 @@ namespace MyInfluxDbClient.UnitTests
         }
 
         [Test]
+        public void AddTags_Should_add_strings()
+        {
+            SUT = CreatePoint()
+                .AddTags(new Dictionary<string, string>
+                {
+                    { "Test1",  "\"quoted\"" },
+                    { "Test 2", "mystring" }
+                });
+
+            SUT.Tags.ShouldBeEquivalentTo(new Dictionary<string, string>
+            {
+                { "Test1", "\\\"quoted\\\"" },
+                { "Test\\ 2", "mystring" }
+            });
+        }
+
+        [Test]
         public void AddField_Should_add_string_value_When_string_is_passed()
         {
             SUT = CreatePoint()
