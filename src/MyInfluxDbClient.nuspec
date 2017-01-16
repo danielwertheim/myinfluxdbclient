@@ -2,12 +2,12 @@
 <package>
     <metadata>
         <id>MyInfluxDbClient</id>
-        <title>MyInfluxDbClient - async InfluxDB client</title>
+        <title>MyInfluxDbClient, an async InfluxDB client</title>
         <version>$version$</version>
         <authors>danielwertheim</authors>
-        <copyright>©Daniel Wertheim</copyright>
-        <summary>Simple, async, InfluxDB client for InfluxDB v1.1.</summary>
-        <description>Provides an async API that allows you to manage InfluxDB databases, write points (with measurement, tags, fields according to line protocol v1.1+) etc.</description>
+        <copyright>Daniel Wertheim</copyright>
+        <summary>Simple, async, InfluxDB client for InfluxDB v1.1</summary>
+        <description>Provides an async API that allows you to manage InfluxDB databases, write points (with measurement, tags, fields according to line protocol v1.1) etc.</description>
         <projectUrl>https://github.com/danielwertheim/myinfluxdbclient</projectUrl>
         <releaseNotes>https://github.com/danielwertheim/myinfluxdbclient/blob/master/ReleaseNotes.md</releaseNotes>
         <licenseUrl>https://raw.githubusercontent.com/danielwertheim/myinfluxdbclient/master/LICENSE.txt</licenseUrl>
