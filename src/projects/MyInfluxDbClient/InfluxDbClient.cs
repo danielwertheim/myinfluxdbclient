@@ -264,6 +264,50 @@ namespace MyInfluxDbClient
             return response.Content;
         }
 
+        public async Task<QueryResult> SelectAsync(string databaseName, Select command)
+        {
+            ThrowIfDisposed();
+
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(command, nameof(command));
+
+            var result = new QueryResult();
+
+            var json = await SelectJsonAsync(databaseName, command).ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            if (data?.Results == null || !data.Results.Any())
+                return result;
+
+            foreach (var match in data.Results.SelectMany(r => r.Series))
+            {
+                result.Add(match.Name, match.Values.Select(value =>
+                {
+                    var resultItem = new QueryResultItem();
+
+                    for (var ci = 0; ci < match.Columns.Count; ci++)
+                        resultItem.Tags.Add(match.Columns[ci], value[ci].ToObject<string>());
+
+                    return resultItem;
+                }).ToArray());
+            }
+
+            return result;
+        }
+
+        public async Task<string> SelectJsonAsync(string databaseName, Select command)
+        {
+            ThrowIfDisposed();
+
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(command, nameof(command));
+
+            var request = CreateCommandRequest(HttpMethod.Get, command.Generate(), databaseName);
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulRead(response);
+
+            return response.Content;
+        }
+
         public async Task<FieldKeys> GetFieldKeysAsync(string databaseName, string measurement = null)
         {
             ThrowIfDisposed();

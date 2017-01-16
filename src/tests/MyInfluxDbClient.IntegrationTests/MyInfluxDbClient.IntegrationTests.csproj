@@ -59,6 +59,7 @@
     <Compile Include="DropSeriesTests.cs" />
     <Compile Include="GetFieldKeysTests.cs" />
     <Compile Include="GetMeasurementsTests.cs" />
+    <Compile Include="SelectTests.cs" />
     <Compile Include="GetTagKeysTests.cs" />
     <Compile Include="IntegrationTestsRuntime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

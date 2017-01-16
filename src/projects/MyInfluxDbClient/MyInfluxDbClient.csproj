@@ -66,6 +66,10 @@
     <Compile Include="InfluxDbClient.cs" />
     <Compile Include="InfluxDbEnvironment.cs" />
     <Compile Include="Measurements.cs" />
+    <Compile Include="QueryResult.cs" />
+    <Compile Include="QueryResultItem.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="Select.cs" />
     <Compile Include="ShowMeasurements.cs" />
     <Compile Include="Meta\SerieSchema.cs" />
     <Compile Include="Responses\ErrorResult.cs" />
@@ -94,7 +98,6 @@
     <Compile Include="RetentionPolicyDuration.cs" />
     <Compile Include="SecondsResolution.cs" />
     <Compile Include="Protocols\StringBuilderLineProtocolWriter.cs" />
-    <Compile Include="SeriesQuery.cs" />
     <Compile Include="ShowSeries.cs" />
     <Compile Include="TimeStamp.cs" />
     <Compile Include="TimeStampPrecision.cs" />
