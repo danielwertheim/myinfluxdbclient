@@ -4,17 +4,27 @@ using MyInfluxDbClient.Net;
 
 namespace MyInfluxDbClient
 {
-    public abstract class SeriesQuery<T> where T : SeriesQuery<T>
+    public abstract class Query<T> where T : Query<T>
     {
-        public string Command { get; }
-        public string From { get; private set; }
-        public string Where { get; private set; }
+        protected string Command { get; }
+        protected string FieldSelection { get; private set; }
+        protected string From { get; private set; }
+        protected string Where { get; private set; }
 
-        protected SeriesQuery(string command)
+        protected Query(string command)
         {
             Ensure.That(command, nameof(command)).IsNotNullOrWhiteSpace();
 
             Command = command;
+        }
+
+        public T SelectedFields(string fields)
+        {
+            Ensure.That(fields, nameof(fields)).IsNotNullOrWhiteSpace();
+
+            FieldSelection = fields;
+
+            return this as T;
         }
 
         public T FromMeasurement(string measurement)
@@ -40,6 +50,12 @@ namespace MyInfluxDbClient
             var sb = new StringBuilder();
 
             sb.Append(Command);
+            if (!string.IsNullOrWhiteSpace(FieldSelection))
+            {
+                sb.Append(" ");
+                sb.Append(FieldSelection);
+            }
+
             if (!string.IsNullOrWhiteSpace(From))
             {
                 sb.Append(" from ");

@@ -3,16 +3,17 @@ Simple async client for interacting with [InfluxDB](http://influxdb.com).
 
 It's under continous developement, but can already be used to perform various database operations and write points, that you then e.g. can use in [Grafana dashboards](http://grafana.org/).
 
-## Roadmap
-Track all features etc. via the [Issues](https://github.com/danielwertheim/myinfluxdbclient/issues) & [Milestones](https://github.com/danielwertheim/myinfluxdbclient/milestones).
+## Release notes
+Release notes are [kept here](ReleaseNotes.md).
 
 ## Focus of the client
-The focus of this driver is of getting data into InfluxDB and to allow you to manage data/schemas. When it comes to queries, there will be support for queries returning typed objects as well as raw JSON. The queries will initially be defined using strings, hence no typed c# lambda expression trees or anything like it. 
+Focus of this driver is **getting data into InfluxDB**. Although it has support for querying and meta-data retriaval. The query support is rudimentary and exists in one version returning raw JSON and another that returns a somewhat typed model for discoverability. But as it is made mainly for writing data, there's no support for lambdas etc.
 
 ## Getting setup
 All operations are currently located on `InfluxDbClient` which extends the interface `IInfluxDbClient`. Internally it makes use of [Requester](https://github.com/danielwertheim/requester) to perform all HTTP-requests.
 
 Install [the NuGet package](https://www.nuget.org/packages/myinfluxdbclient):
+
 ```
 install-package MyInfluxDbClient
 ```

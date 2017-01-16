@@ -24,11 +24,11 @@ namespace MyInfluxDbClient
 
         public WriteOptions DefaultWriteOptions { get; }
 
-        public InfluxDbClient(string host) : this(new HttpRequester(host)) { }
+        public InfluxDbClient(string host) : this(HttpRequester.Create(host)) { }
 
         protected InfluxDbClient(HttpRequester requester)
         {
-            Ensure.That(requester, nameof(requester)).IsNotNull();
+            EnsureArg.IsNotNull(requester, nameof(requester));
 
             Requester = requester;
             InfluxPointsSerializer = new LineProtocolInfluxPointsSerializer();
@@ -37,14 +37,10 @@ namespace MyInfluxDbClient
         }
 
         public void UseBasicAuth(string username, string password)
-        {
-            Requester.Config.WithBasicAuthorization(username, password);
-        }
+            => Requester.Config.WithBasicAuthorization(username, password);
 
         private static WriteOptions CreateDefaultWriteOptions()
-        {
-            return new WriteOptions();
-        }
+            => new WriteOptions();
 
         public void Dispose()
         {
@@ -72,20 +68,9 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
-            var request = CreateCommandRequest($"create database {UrlEncoder.Encode(databaseName)}");
-            var response = await Requester.SendAsync(request).ForAwait();
-            EnsureSuccessful(response);
-        }
-
-        public async Task CreateDatabaseIfNotExistsAsync(string databaseName)
-        {
-            ThrowIfDisposed();
-
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-
-            var request = CreateCommandRequest($"create database if not exists {UrlEncoder.Encode(databaseName)}");
+            var request = CreateCommandRequest(HttpMethod.Post, $"create database {UrlEncoder.Encode(databaseName)}");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
@@ -94,20 +79,9 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
-            var request = CreateCommandRequest($"drop database {UrlEncoder.Encode(databaseName)}");
-            var response = await Requester.SendAsync(request).ForAwait();
-            EnsureSuccessful(response);
-        }
-
-        public async Task DropDatabaseIfExistsAsync(string databaseName)
-        {
-            ThrowIfDisposed();
-
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-
-            var request = CreateCommandRequest($"drop database if exists {UrlEncoder.Encode(databaseName)}");
+            var request = CreateCommandRequest(HttpMethod.Post, $"drop database {UrlEncoder.Encode(databaseName)}");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
@@ -116,7 +90,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var databaseNames = await GetDatabasesAsync().ForAwait();
 
@@ -144,7 +118,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            var request = CreateCommandRequest("show databases");
+            var request = CreateCommandRequest(HttpMethod.Get, "show databases");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -155,11 +129,11 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(policy, nameof(policy)).IsNotNull();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(policy, nameof(policy));
 
             var defaultString = policy.MakeDefault.HasValue && policy.MakeDefault.Value ? " default" : string.Empty;
-            var request = CreateCommandRequest($"create retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)} duration {policy.Duration} replication {policy.Replication}{defaultString}");
+            var request = CreateCommandRequest(HttpMethod.Post, $"create retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)} duration {policy.Duration} replication {policy.Replication}{defaultString}");
 
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
@@ -169,8 +143,8 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(policy, nameof(policy)).IsNotNull();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(policy, nameof(policy));
 
             var cmd = new StringBuilder();
             cmd.Append($"alter retention policy {UrlEncoder.Encode(policy.Name)} on {UrlEncoder.Encode(databaseName)}");
@@ -181,7 +155,7 @@ namespace MyInfluxDbClient
             if (policy.MakeDefault.HasValue && policy.MakeDefault.Value)
                 cmd.Append(" default");
 
-            var request = CreateCommandRequest(cmd.ToString());
+            var request = CreateCommandRequest(HttpMethod.Post, cmd.ToString());
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
@@ -190,10 +164,10 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(policyName, nameof(policyName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNullOrWhiteSpace(policyName, nameof(policyName));
 
-            var request = CreateCommandRequest($"drop retention policy {UrlEncoder.Encode(policyName)} on {UrlEncoder.Encode(databaseName)}");
+            var request = CreateCommandRequest(HttpMethod.Post, $"drop retention policy {UrlEncoder.Encode(policyName)} on {UrlEncoder.Encode(databaseName)}");
 
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
@@ -203,7 +177,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var json = await GetRetentionPoliciesJsonAsync(databaseName).ForAwait();
             var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
@@ -225,9 +199,9 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
-            var request = CreateCommandRequest($"show retention policies on {UrlEncoder.Encode(databaseName)}");
+            var request = CreateCommandRequest(HttpMethod.Get, $"show retention policies on {UrlEncoder.Encode(databaseName)}");
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -238,10 +212,10 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(command, nameof(command)).IsNotNull();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(command, nameof(command));
 
-            var request = CreateCommandRequest(command.Generate(), databaseName);
+            var request = CreateCommandRequest(HttpMethod.Post, command.Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
@@ -250,7 +224,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var result = new Series();
 
@@ -263,20 +237,12 @@ namespace MyInfluxDbClient
             {
                 var schema = serie.GetSchemaOrdinals();
                 var keyOrdinal = schema[SerieSchema.Key];
-                result.Add(serie.Name, serie.Values.Select(value =>
+                result.AddRange(serie.Values.Select(value =>
                 {
                     var serieItem = new SerieItem
                     {
                         Key = value[keyOrdinal].ToObject<string>()
                     };
-
-                    for (var ci = 0; ci < serie.Columns.Count; ci++)
-                    {
-                        if (ci == keyOrdinal)
-                            continue;
-
-                        serieItem.Tags.Add(serie.Columns[ci], value[ci].ToObject<string>());
-                    }
 
                     return serieItem;
                 }).ToArray());
@@ -289,9 +255,53 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
-            var request = CreateCommandRequest((command ?? new ShowSeries()).Generate(), databaseName);
+            var request = CreateCommandRequest(HttpMethod.Get, (command ?? new ShowSeries()).Generate(), databaseName);
+            var response = await Requester.SendAsync(request).ForAwait();
+            EnsureSuccessfulRead(response);
+
+            return response.Content;
+        }
+
+        public async Task<QueryResult> SelectAsync(string databaseName, Select command)
+        {
+            ThrowIfDisposed();
+
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(command, nameof(command));
+
+            var result = new QueryResult();
+
+            var json = await SelectJsonAsync(databaseName, command).ForAwait();
+            var data = Requester.JsonSerializer.Deserialize<InfluxDbResponse>(json);
+            if (data?.Results == null || !data.Results.Any())
+                return result;
+
+            foreach (var match in data.Results.SelectMany(r => r.Series))
+            {
+                result.Add(match.Name, match.Values.Select(value =>
+                {
+                    var resultItem = new QueryResultItem();
+
+                    for (var ci = 0; ci < match.Columns.Count; ci++)
+                        resultItem.Tags.Add(match.Columns[ci], value[ci].ToObject<string>());
+
+                    return resultItem;
+                }).ToArray());
+            }
+
+            return result;
+        }
+
+        public async Task<string> SelectJsonAsync(string databaseName, Select command)
+        {
+            ThrowIfDisposed();
+
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(command, nameof(command));
+
+            var request = CreateCommandRequest(HttpMethod.Get, command.Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -302,7 +312,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var result = new FieldKeys();
 
@@ -321,7 +331,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var q = new StringBuilder();
             q.Append("show field keys");
@@ -333,7 +343,7 @@ namespace MyInfluxDbClient
                 q.Append("\"");
             }
 
-            var request = CreateCommandRequest(q.ToString(), databaseName);
+            var request = CreateCommandRequest(HttpMethod.Get, q.ToString(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -344,7 +354,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var result = new TagKeys();
 
@@ -363,7 +373,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var q = new StringBuilder();
             q.Append("show tag keys");
@@ -375,7 +385,7 @@ namespace MyInfluxDbClient
                 q.Append("\"");
             }
 
-            var request = CreateCommandRequest(q.ToString(), databaseName);
+            var request = CreateCommandRequest(HttpMethod.Get, q.ToString(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -386,7 +396,7 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
             var result = new Measurements();
 
@@ -405,9 +415,9 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
 
-            var request = CreateCommandRequest((command ?? new ShowMeasurements()).Generate(), databaseName);
+            var request = CreateCommandRequest(HttpMethod.Get, (command ?? new ShowMeasurements()).Generate(), databaseName);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessfulRead(response);
 
@@ -418,23 +428,25 @@ namespace MyInfluxDbClient
         {
             ThrowIfDisposed();
 
-            Ensure.That(databaseName, nameof(databaseName)).IsNotNullOrWhiteSpace();
-            Ensure.That(points, nameof(points)).IsNotNull();
-            Ensure.That(points.IsEmpty, nameof(points)).WithExtraMessageOf(() => "Can not write empty points collections.").IsFalse();
+            EnsureArg.IsNotNullOrWhiteSpace(databaseName, nameof(databaseName));
+            EnsureArg.IsNotNull(points, nameof(points));
+
+            if (points.IsEmpty)
+                throw new ArgumentException("Can not write empty points collections.", nameof(points));
 
             var request = CreateWritePointsRequest(databaseName, points, options);
             var response = await Requester.SendAsync(request).ForAwait();
             EnsureSuccessful(response);
         }
 
-        protected virtual HttpRequest CreateCommandRequest(string command)
+        protected virtual HttpRequest CreateCommandRequest(HttpMethod method, string command)
         {
-            return new HttpRequest(HttpMethod.Get, $"query?q={command}");
+            return new HttpRequest(method, $"query?q={command}");
         }
 
-        protected virtual HttpRequest CreateCommandRequest(string command, string dbName)
+        protected virtual HttpRequest CreateCommandRequest(HttpMethod method, string command, string dbName)
         {
-            return new HttpRequest(HttpMethod.Get, $"query?db={UrlEncoder.Encode(dbName)}&q={command}");
+            return new HttpRequest(method, $"query?db={UrlEncoder.Encode(dbName)}&q={command}");
         }
 
         protected virtual HttpRequest CreateWritePointsRequest(string databaseName, InfluxPoints points, WriteOptions options = null)

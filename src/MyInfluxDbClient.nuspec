@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>MyInfluxDbClient</id>
+        <title>MyInfluxDbClient, an async InfluxDB client</title>
+        <version>$version$</version>
+        <authors>danielwertheim</authors>
+        <copyright>Daniel Wertheim</copyright>
+        <summary>Simple, async, InfluxDB client for InfluxDB v1.1</summary>
+        <description>Provides an async API that allows you to manage InfluxDB databases, write points (with measurement, tags, fields according to line protocol v1.1) etc.</description>
+        <projectUrl>https://github.com/danielwertheim/myinfluxdbclient</projectUrl>
+        <releaseNotes>https://github.com/danielwertheim/myinfluxdbclient/blob/master/ReleaseNotes.md</releaseNotes>
+        <licenseUrl>https://raw.githubusercontent.com/danielwertheim/myinfluxdbclient/master/LICENSE.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>influxdb time-series</tags>
+        <frameworkAssemblies>
+          <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net45" />
+        </frameworkAssemblies>
+        <dependencies>
+           <group targetFramework="net45">
+             <dependency id="Ensure.That" version="5.0.0" />
+             <dependency id="Newtonsoft.Json" version="9.0.1" />
+             <dependency id="Requester" version="1.5.1" />
+           </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="projects\MyInfluxDbClient\bin\$configuration$\MyInfluxDbClient.dll" target="lib\net45" />
+    </files>
+</package>

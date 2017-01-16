@@ -2,7 +2,7 @@ using System;
 
 namespace MyInfluxDbClient
 {
-    public class DropSeries : SeriesQuery<DropSeries>
+    public class DropSeries : Query<DropSeries>
     {
         public DropSeries() : base("drop series") {}
 

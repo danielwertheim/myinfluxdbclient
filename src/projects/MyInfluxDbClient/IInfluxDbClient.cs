@@ -9,9 +9,7 @@ namespace MyInfluxDbClient
         void UseBasicAuth(string username, string password);
 
         Task CreateDatabaseAsync(string databaseName);
-        Task CreateDatabaseIfNotExistsAsync(string databaseName);
         Task DropDatabaseAsync(string databaseName);
-        Task DropDatabaseIfExistsAsync(string databaseName);
         Task<bool> DatabaseExistsAsync(string databaseName);
         Task<Databases> GetDatabasesAsync();
         Task<string> GetDatabasesJsonAsync();
@@ -34,6 +32,9 @@ namespace MyInfluxDbClient
 
         Task<Measurements> GetMeasurementsAsync(string databaseName, ShowMeasurements command = null);
         Task<string> GetMeasurementsJsonAsync(string databaseName, ShowMeasurements command = null);
+
+        Task<QueryResult> SelectAsync(string databaseName, Select command);
+        Task<string> SelectJsonAsync(string databaseName, Select command);
 
         Task WriteAsync(string databaseName, InfluxPoints points, WriteOptions options = null);
     }

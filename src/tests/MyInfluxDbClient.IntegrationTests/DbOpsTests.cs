@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -26,59 +27,20 @@ namespace MyInfluxDbClient.IntegrationTests
         }
 
         [Test]
-        public async Task CreateDatabaseIfNotExistsAsync_Should_create_database_When_database_does_not_exists()
-        {
-            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
-            await Client.CreateDatabaseIfNotExistsAsync(databaseName);
-
-            (await Client.DatabaseExistsAsync(databaseName)).Should().BeTrue();
-        }
-
-        [Test]
-        public async Task CreateDatabaseIfNotExistsAsync_Should_not_throw_When_database_already_exists()
+        public async Task CreateDatabaseAsync_Should_not_throw_When_database_already_exists()
         {
             var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
             await Client.CreateDatabaseAsync(databaseName);
 
-            await Client.CreateDatabaseIfNotExistsAsync(databaseName);
+            Client.Invoking(sut => sut.CreateDatabaseAsync(databaseName).Wait()).ShouldNotThrow();
         }
 
         [Test]
-        public async Task CreateDatabaseAsync_Should_throw_When_database_already_exists()
-        {
-            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
-            await Client.CreateDatabaseAsync(databaseName);
-
-            Client.Invoking(sut => Client.CreateDatabaseAsync(databaseName).Wait())
-                .ShouldThrow<InfluxDbClientException>().Where(ex => ex.Reason == "database already exists");
-        }
-
-        [Test]
-        public async Task DropDatabaseIfExistsAsync_Should_drop_database_When_database_exists()
-        {
-            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
-            await Client.CreateDatabaseAsync(databaseName);
-
-            await Client.DropDatabaseIfExistsAsync(databaseName);
-
-            (await Client.DatabaseExistsAsync(databaseName)).Should().BeFalse();
-        }
-
-        [Test]
-        public async Task DropDatabaseIfExistsAsync_Should_not_throw_When_database_does_not_exist()
+        public void DropDatabaseAsync_Should_not_throw_When_database_does_not_exist()
         {
             var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
 
-            await Client.DropDatabaseIfExistsAsync(databaseName);
-        }
-
-        [Test]
-        public void DropDatabaseAsync_Should_throw_When_database_does_not_exist()
-        {
-            var databaseName = IntegrationTestsRuntime.GenerateUniqueDatabaseName();
-
-            Client.Invoking(sut => Client.DropDatabaseAsync(databaseName).Wait())
-                .ShouldThrow<InfluxDbClientException>().Where(ex => ex.Reason.StartsWith("database not found"));
+            Client.Invoking(sut => sut.DropDatabaseAsync(databaseName).Wait()).ShouldNotThrow();
         }
     }
 }
