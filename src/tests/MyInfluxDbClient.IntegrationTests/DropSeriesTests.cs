@@ -26,7 +26,7 @@ namespace MyInfluxDbClient.IntegrationTests
             await Client.DropSeriesAsync(_databaseName, new DropSeries().FromMeasurement(measurementName));
 
             var series = await Client.GetSeriesAsync(_databaseName);
-            series.Should().NotContainKey(measurementName);
+            series.Should().NotContain(s => s.Key.StartsWith(measurementName));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace MyInfluxDbClient.IntegrationTests
             await Client.DropSeriesAsync(_databaseName, new DropSeries().WhereTags("tag1 = 'one'"));
 
             var series = await Client.GetSeriesAsync(_databaseName);
-            series.Should().NotContainKey(measurementName);
+            series.Should().NotContain(s => s.Key.StartsWith(measurementName));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace MyInfluxDbClient.IntegrationTests
             await Client.DropSeriesAsync(_databaseName, new DropSeries().FromMeasurement(measurementName + "foo"));
 
             var series = await Client.GetSeriesAsync(_databaseName);
-            series.Should().ContainKey(measurementName);
+            series.Should().Contain(s => s.Key.StartsWith(measurementName));
         }
     }
 }

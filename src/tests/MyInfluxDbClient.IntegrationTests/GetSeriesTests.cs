@@ -35,51 +35,29 @@ namespace MyInfluxDbClient.IntegrationTests
         }
 
         [Test]
-        public async Task Should_extract_key_and_tags_by_measurement()
-        {
-            var series = await Client.GetSeriesAsync(_databaseName);
-
-            foreach (var serieItem in series["orderCreated"])
-            {
-                serieItem.Tags.Should().ContainKey("mid");
-                serieItem.Tags.Should().ContainKey("oid");
-                serieItem.Key.Should().Be($"orderCreated,mid={serieItem.Tags["mid"]},oid={serieItem.Tags["oid"]}");
-            }
-
-            foreach (var serieItem in series["paymentRecieved"])
-            {
-                serieItem.Tags.Should().ContainKey("mid");
-                serieItem.Tags.Should().ContainKey("oid");
-                serieItem.Tags.Should().ContainKey("pid");
-                serieItem.Key.Should().Be($"paymentRecieved,mid={serieItem.Tags["mid"]},oid={serieItem.Tags["oid"]},pid={serieItem.Tags["pid"]}");
-            }
-        }
-
-        [Test]
         public async Task Should_return_all_series_When_no_from_or_where_is_specified()
         {
             var series = await Client.GetSeriesAsync(_databaseName);
 
-            series.Should().ContainKey("orderCreated");
-            series.Should().ContainKey("paymentRecieved");
-            series["orderCreated"].Should().HaveSameCount(_seededOrderCreatedKeys);
-            series["paymentRecieved"].Should().HaveSameCount(_seededPaymentRecievedKeys);
+            var orderCreatedItems = series.Where(s => s.Key.StartsWith("orderCreated")).ToList();
+            var paymentRecievedItems = series.Where(s => s.Key.StartsWith("paymentRecieved")).ToList();
+
+            orderCreatedItems.Should().HaveSameCount(_seededOrderCreatedKeys);
+            paymentRecievedItems.Should().HaveSameCount(_seededPaymentRecievedKeys);
         }
 
         [Test]
         public async Task Should_return_by_measurement_When_from_measurement_is_specified()
         {
             var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("orderCreated"));
-            orderCreatedItems.Should().HaveCount(1);
-            orderCreatedItems.Should().ContainKey("orderCreated");
-            orderCreatedItems["orderCreated"].Should().HaveSameCount(_seededOrderCreatedKeys);
-            orderCreatedItems["orderCreated"].Select(i => i.Key).Should().Contain(_seededOrderCreatedKeys);
+            orderCreatedItems.Should().OnlyContain(s => s.Key.StartsWith("orderCreated"));
+            orderCreatedItems.Should().HaveSameCount(_seededOrderCreatedKeys);
+            orderCreatedItems.Select(i => i.Key).Should().Contain(_seededOrderCreatedKeys);
 
             var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("paymentRecieved"));
-            paymentRecievedItems.Should().HaveCount(1);
-            paymentRecievedItems.Should().ContainKey("paymentRecieved");
-            paymentRecievedItems["paymentRecieved"].Should().HaveSameCount(_seededPaymentRecievedKeys);
-            paymentRecievedItems["paymentRecieved"].Select(i => i.Key).Should().Contain(_seededPaymentRecievedKeys);
+            paymentRecievedItems.Should().OnlyContain(s => s.Key.StartsWith("paymentRecieved"));
+            paymentRecievedItems.Should().HaveSameCount(_seededPaymentRecievedKeys);
+            paymentRecievedItems.Select(i => i.Key).Should().Contain(_seededPaymentRecievedKeys);
         }
 
         [Test]
@@ -87,9 +65,8 @@ namespace MyInfluxDbClient.IntegrationTests
         {
             var items = await Client.GetSeriesAsync(_databaseName, new ShowSeries().WhereTags("oid='1' and mid='1'"));
 
-            var values = items.SelectMany(i => i.Value).ToArray();
-            values.Should().HaveCount(3);
-            values.Select(i => i.Key).Should().Contain(new[] { "orderCreated,mid=1,oid=1", "paymentRecieved,mid=1,oid=1,pid=1", "paymentRecieved,mid=1,oid=1,pid=2" });
+            items.Should().HaveCount(3);
+            items.Select(i => i.Key).Should().Contain(new[] { "orderCreated,mid=1,oid=1", "paymentRecieved,mid=1,oid=1,pid=1", "paymentRecieved,mid=1,oid=1,pid=2" });
         }
 
         [Test]
@@ -98,11 +75,11 @@ namespace MyInfluxDbClient.IntegrationTests
             var orderCreatedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("orderCreated").WhereTags("mid='2'"));
             var paymentRecievedItems = await Client.GetSeriesAsync(_databaseName, new ShowSeries().FromMeasurement("paymentRecieved").WhereTags("oid='1' and mid='1'"));
 
-            orderCreatedItems["orderCreated"].Should().HaveCount(1);
-            orderCreatedItems["orderCreated"].Should().Contain(i => i.Key == "orderCreated,mid=2,oid=3");
+            orderCreatedItems.Should().HaveCount(1);
+            orderCreatedItems.Should().Contain(i => i.Key == "orderCreated,mid=2,oid=3");
 
-            paymentRecievedItems["paymentRecieved"].Should().HaveSameCount(_seededPaymentRecievedKeys);
-            paymentRecievedItems["paymentRecieved"].Select(i => i.Key).Should().Contain(_seededPaymentRecievedKeys);
+            paymentRecievedItems.Should().HaveSameCount(_seededPaymentRecievedKeys);
+            paymentRecievedItems.Select(i => i.Key).Should().Contain(_seededPaymentRecievedKeys);
         }
     }
 }

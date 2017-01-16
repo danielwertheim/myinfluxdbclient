@@ -2,6 +2,6 @@
 {
     internal static class SerieSchema
     {
-        internal const string Key = "_key";
+        internal const string Key = "key";
     }
 }
